@@ -349,6 +349,24 @@ Every permission consists of three lowercase, colon-separated segments:
   php artisan seed:super-admin
   ```
 
+### Authentication System & Login Blade Integration
+- **Login Views:**
+  - [`Modules/User/resources/views/auth/login.blade.php`](Modules/User/resources/views/auth/login.blade.php) (view namespace: `user::auth.login`)
+  - [`resources/views/auth/login.blade.php`](resources/views/auth/login.blade.php) (global alias)
+- **Visual Design:**
+  - Left panel: Blue gradient welcome section with features and dental brand mark.
+  - Right card: Clean sign-in form with email input, password with show/hide toggle, Remember Me checkbox, and validation error messages.
+  - No demo credentials or demo account block.
+- **Controller & Routes:**
+  - [`Modules\User\Http\Controllers\AuthController`](Modules/User/app/Http/Controllers/AuthController.php) handles `showLoginForm`, `login`, and `logout`.
+  - `GET /login` (`login`) &mdash; Guest only; authenticated users redirected to `/dashboard`.
+  - `POST /login` &mdash; Validates credentials, supports Remember Me, regenerates session ID, and redirects to intended URL.
+  - `POST /logout` (`logout`) &mdash; Logs out user, invalidates session, regenerates CSRF token, and redirects to `/login`.
+- **Protected Routes:**
+  - Unauthenticated access to protected management routes (`/users`, `/roles`) redirects directly to `/login`.
+- **Header & Sidebar UI:**
+  - Added Sign Out / Sign In buttons in sidebar footer and header user profile.
+
 ### Working with Modules
 
 #### List Modules

@@ -162,6 +162,18 @@
                 <span class="user-role">{{ (auth()->check() && auth()->user()->roles->first()) ? auth()->user()->roles->first()->label : 'Dental Surgeon' }}</span>
             </div>
         </div>
+        @auth
+            <form method="POST" action="{{ route('logout') }}" style="margin-top: 8px;">
+                @csrf
+                <button type="submit" class="btn btn-outline btn-sm" style="width: 100%; font-size: 0.75rem; padding: 4px 8px; color: #dc2626; border-color: #fca5a5;">
+                    Sign Out
+                </button>
+            </form>
+        @else
+            <a href="{{ route('login') }}" class="btn btn-outline btn-sm" style="display: block; text-align: center; margin-top: 8px; font-size: 0.75rem; padding: 4px 8px;">
+                Sign In
+            </a>
+        @endauth
     </div>
 </aside>
 

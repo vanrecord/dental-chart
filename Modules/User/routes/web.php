@@ -1,10 +1,24 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\User\Http\Controllers\AuthController;
 use Modules\User\Http\Controllers\RoleController;
 use Modules\User\Http\Controllers\UserController;
 
-Route::middleware('web')->group(function () {
+// Guest Authentication Routes
+Route::middleware('guest')->group(function () {
+    Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [AuthController::class, 'login']);
+});
+
+// Authenticated Logout Route
+Route::middleware('auth')->group(function () {
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('logout', [AuthController::class, 'logout']);
+});
+
+// Protected Administration Routes (User CRUD & Role CRUD)
+Route::middleware('auth')->group(function () {
     // User Management CRUD
     Route::resource('users', UserController::class);
 
