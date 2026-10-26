@@ -31,3 +31,4 @@ class Patient extends Model
         return $this->hasMany(DentalChart::class);
     }
 }
+

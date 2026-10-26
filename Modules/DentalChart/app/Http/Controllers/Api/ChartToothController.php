@@ -55,3 +55,4 @@ class ChartToothController extends Controller
         return response()->json(['message' => 'Chart tooth deleted successfully']);
     }
 }
+

@@ -27,3 +27,4 @@ class SyncChartFindingsRequest extends FormRequest
         ];
     }
 }
+

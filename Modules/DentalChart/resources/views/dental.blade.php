@@ -1,41 +1,33 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<meta name="color-scheme" content="light">
-<title>{{ isset($activeChart) ? 'Chart - ' . $activeChart->patient->full_name : 'Interactive Dental Chart' }}</title>
+@extends('core::layouts.app')
+
+@section('title', isset($activeChart) ? 'Chart - ' . $activeChart->patient->full_name : 'Interactive Dental Chart')
+
+@section('styles')
 <style>
-:root{--ink:#171717;--paper:#fffefa;--muted:#686868;--line:#202020;--blue:#2457c5;--bg:#f2f4f7;--border:#dadde2}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#1f2937;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-button,input,select,textarea{font:inherit}button{cursor:pointer}
-.nav-strip{background:#ffffff;border-bottom:1px solid #e2e8f0;padding:10px 22px;display:flex;justify-content:space-between;align-items:center;font-size:13px}
-.nav-strip a{color:#475569;text-decoration:none;font-weight:600;margin-right:15px}
-.nav-strip a:hover{color:#2457c5}
-.nav-strip .nav-left{display:flex;align-items:center}
-.page{max-width:1440px;margin:auto;padding:20px 22px 42px}
+:root{--ink:#171717;--paper:#fffefa;--muted:#686868;--line:#202020;--blue:#2457c5;--bg:#f8fafc;--border:#dadde2}
+.odontogram-page{width:100%;max-width:1400px;margin:0 auto;}
 .topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:18px}
 .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.16em;color:#64748b;font-weight:800}
-.title{margin:5px 0 7px;font-size:clamp(24px,3vw,34px);letter-spacing:-.035em;color:#111827}
-.sub{margin:0;color:#697386;font-size:14px}
+.title{margin:5px 0 7px;font-size:clamp(22px,2.5vw,30px);letter-spacing:-.035em;color:#0f172a}
+.sub{margin:0;color:#64748b;font-size:13.5px}
 .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.btn{border:1px solid #d3d8e1;background:#fff;border-radius:9px;padding:9px 13px;color:#303846;font-weight:700;font-size:13px;box-shadow:0 1px 1px #12121208;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
-.btn:hover{background:#f8fafc}
-.btn-primary{background:#2457c5;color:white;border-color:#2457c5}
-.btn-primary:hover{background:#1d48a3}
-.btn-danger{color:#b42318;border-color:#f1c5c1}
-.patient-selector{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #d3d8e1;padding:4px 8px;border-radius:9px}
-.patient-selector select{border:0;background:transparent;outline:none;font-size:13px;font-weight:600;color:#1e293b}
+.btn-chart{border:1px solid #cbd5e1;background:#fff;border-radius:9px;padding:8px 12px;color:#334155;font-weight:700;font-size:13px;box-shadow:0 1px 2px rgba(0,0,0,0.04);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all 0.15s;}
+.btn-chart:hover{background:#f8fafc;border-color:#94a3b8}
+.btn-chart-primary{background:#2457c5;color:white;border-color:#2457c5}
+.btn-chart-primary:hover{background:#1d48a3;border-color:#1d48a3}
+.btn-chart-danger{color:#b42318;border-color:#fecaca;background:#fff5f5}
+.btn-chart-danger:hover{background:#fee2e2}
+.patient-selector{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #cbd5e1;padding:4px 9px;border-radius:9px}
+.patient-selector select{border:0;background:transparent;outline:none;font-size:13px;font-weight:600;color:#1e293b;cursor:pointer}
 .toolrow{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
 .filters{display:flex;gap:6px;flex-wrap:wrap}
-.filter{padding:8px 12px;border:1px solid #d6dae2;background:#fff;color:#536071;border-radius:999px;font-size:12px;font-weight:800}
-.filter.active{background:#e8efff;color:#1c4bb3;border-color:#adc4ff}
-.status{font-size:12px;color:#667085}
-.paper-shell{background:#fff;border:1px solid #e1e4e8;border-radius:16px;padding:14px;box-shadow:0 8px 30px #1118270a}
+.filter{padding:7px 12px;border:1px solid #cbd5e1;background:#fff;color:#475569;border-radius:999px;font-size:12px;font-weight:800;cursor:pointer;transition:all 0.15s;}
+.filter.active{background:#eff6ff;color:#1d4ed8;border-color:#93c5fd}
+.status{font-size:12px;color:#64748b}
+.paper-shell{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:14px;box-shadow:0 4px 20px rgba(0,0,0,0.04)}
 .paper{background:var(--paper);border:1px solid #d2d0c8;padding:24px 26px 22px;box-shadow:inset 0 0 0 1px #ffffffb0}
-.paper-heading{font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:800;font-style:italic;letter-spacing:-.02em;color:#2a2a2a;margin:0 0 18px}
-.paper-heading span{font-weight:500;font-size:17px;letter-spacing:0}
+.paper-heading{font-family:Arial,Helvetica,sans-serif;font-size:19px;font-weight:800;font-style:italic;letter-spacing:-.02em;color:#2a2a2a;margin:0 0 18px}
+.paper-heading span{font-weight:500;font-size:16px;letter-spacing:0}
 .chart-scroll{overflow-x:auto;padding:0 0 6px}
 .chart-inner{min-width:1090px;padding:8px 0 0}
 .arch-row{display:flex;align-items:stretch;justify-content:center;gap:12px;min-width:max-content}
@@ -44,7 +36,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
 .tooth-slot{width:54px;min-height:80px;display:flex;align-items:center;justify-content:flex-start}
 .tooth-slot.empty{pointer-events:none}
 .tooth{width:54px;display:flex;flex-direction:column;align-items:center;position:relative}
-.tooth-number{border:0;background:transparent;color:#262626;border-radius:3px;font-size:14px;line-height:20px;height:22px;width:100%;padding:0;font-weight:500;text-align:center}
+.tooth-number{border:0;background:transparent;color:#262626;border-radius:3px;font-size:14px;line-height:20px;height:22px;width:100%;padding:0;font-weight:500;text-align:center;cursor:pointer}
 .tooth-number:hover,.tooth-number:focus-visible{background:#e9eefc;outline:1px solid #a8b9ed}
 .tooth-face{width:43px;height:51px;display:block;overflow:visible}
 .tooth-face polygon{stroke:#252525;stroke-width:2.6;stroke-linejoin:miter;fill:#fff;cursor:pointer;transition:fill .12s,filter .12s}
@@ -71,65 +63,49 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
 .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#4b5563}
 .swatch{width:12px;height:12px;border:1px solid #858585;border-radius:3px;display:inline-block}
 .other-info{margin-top:20px;display:flex;gap:10px;align-items:flex-start}
-.other-info label{font-family:Arial,Helvetica,sans-serif;font-size:22px;white-space:nowrap;font-weight:800;color:#232323}
+.other-info label{font-family:Arial,Helvetica,sans-serif;font-size:20px;white-space:nowrap;font-weight:800;color:#232323}
 .other-info textarea{border:0;border-bottom:2px solid #222;border-radius:0;resize:vertical;min-height:33px;flex:1;padding:6px 8px;background:transparent;outline:none;color:#202020;font-size:14px}
 .paper-foot{display:flex;justify-content:space-between;gap:14px;margin-top:14px;color:#9b9b96;font-size:10px}
-.hint{margin:13px 2px 0;color:#667085;font-size:12px;display:flex;align-items:center;gap:8px}
+.hint{margin:13px 2px 0;color:#64748b;font-size:12px;display:flex;align-items:center;gap:8px}
 .hint-dot{width:7px;height:7px;background:#2457c5;border-radius:50%;display:inline-block}
 .below-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px;margin-top:15px}
 .info-card{background:white;border:1px solid var(--border);border-radius:12px;padding:16px}
-.info-card h3{font-size:13px;margin:0 0 9px;color:#364152}
-.stat-big{font-size:24px;font-weight:800;color:#141b2d}
-.stat-small{font-size:12px;color:#7b8493;margin-top:3px}
+.info-card h3{font-size:13px;margin:0 0 9px;color:#334155}
+.stat-big{font-size:24px;font-weight:800;color:#0f172a}
+.stat-small{font-size:12px;color:#64748b;margin-top:3px}
 .findings-list{display:flex;flex-direction:column;gap:7px;max-height:190px;overflow:auto}
-.finding-item{display:flex;justify-content:space-between;gap:10px;border:1px solid #e6e8ec;border-radius:8px;padding:8px 10px;font-size:12px}
+.finding-item{display:flex;justify-content:space-between;gap:10px;border:1px solid #e2e8f0;border-radius:8px;padding:8px 10px;font-size:12px}
 .finding-item strong{font-weight:800}
-.finding-item button{border:0;background:transparent;color:#2457c5;font-weight:800;font-size:11px}
-.empty-note{font-size:12px;color:#8992a1}
-.modal-backdrop{position:fixed;inset:0;z-index:30;background:rgba(18,25,38,.52);display:none;align-items:center;justify-content:center;padding:18px}
+.finding-item button{border:0;background:transparent;color:#2457c5;font-weight:800;font-size:11px;cursor:pointer}
+.empty-note{font-size:12px;color:#94a3b8}
+.modal-backdrop{position:fixed;inset:0;z-index:300;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;padding:18px}
 .modal-backdrop.open{display:flex}
-.modal{background:#fff;border-radius:17px;width:min(100%,530px);max-height:calc(100vh - 36px);overflow:auto;box-shadow:0 25px 80px #0003}
-.modal-head{display:flex;justify-content:space-between;align-items:flex-start;padding:22px 23px 14px;border-bottom:1px solid #eef0f4}
-.modal-kicker{font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:#697586;font-weight:800}
-.modal-title{margin:5px 0 0;font-size:22px;font-weight:850;letter-spacing:-.03em;color:#161d2b}
-.close{border:0;background:#f2f4f7;width:31px;height:31px;border-radius:8px;font-size:22px;line-height:1;color:#667085}
+.modal{background:#fff;border-radius:17px;width:min(100%,530px);max-height:calc(100vh - 36px);overflow:auto;box-shadow:0 25px 80px rgba(0,0,0,0.25)}
+.modal-head{display:flex;justify-content:space-between;align-items:flex-start;padding:22px 23px 14px;border-bottom:1px solid #e2e8f0}
+.modal-kicker{font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:#64748b;font-weight:800}
+.modal-title{margin:5px 0 0;font-size:21px;font-weight:850;letter-spacing:-.03em;color:#0f172a}
+.close{border:0;background:#f1f5f9;width:31px;height:31px;border-radius:8px;font-size:22px;line-height:1;color:#64748b;cursor:pointer}
 .modal-body{padding:18px 23px 22px}
 .field{margin-bottom:14px}
-.field label{display:block;font-size:12px;font-weight:800;color:#3b4554;margin-bottom:6px}
-.field input:not([type=color]),.field select,.field textarea{width:100%;border:1px solid #d7dce5;border-radius:9px;padding:10px 11px;font-size:13px;background:#fff;color:#222b3b;outline:none}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:#87a7fb;box-shadow:0 0 0 3px #eaf0ff}
+.field label{display:block;font-size:12px;font-weight:800;color:#334155;margin-bottom:6px}
+.field input:not([type=color]),.field select,.field textarea{width:100%;border:1px solid #cbd5e1;border-radius:9px;padding:9px 11px;font-size:13px;background:#fff;color:#0f172a;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.15)}
 .field textarea{resize:vertical;min-height:86px}
 .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .color-row{display:flex;align-items:center;gap:10px}
-.color-row input[type=color]{width:45px;height:38px;border:1px solid #d7dce5;border-radius:8px;background:#fff;padding:3px}
-.color-help{font-size:12px;color:#7b8493}
+.color-row input[type=color]{width:45px;height:38px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;padding:3px;cursor:pointer}
+.color-help{font-size:12px;color:#64748b}
 .modal-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:19px}
 .modal-actions-right{display:flex;gap:8px}
-.toast{position:fixed;z-index:60;bottom:22px;left:50%;transform:translateX(-50%);background:#192130;color:white;border-radius:10px;padding:11px 16px;box-shadow:0 8px 30px #0002;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast{position:fixed;z-index:400;bottom:22px;left:50%;transform:translateX(-50%);background:#0f172a;color:white;border-radius:10px;padding:11px 16px;box-shadow:0 8px 30px rgba(0,0,0,0.2);font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s}
 .toast.show{opacity:1}
-@media(max-width:740px){.page{padding:17px 10px 30px}.paper-shell{padding:6px;border-radius:11px}.paper{padding:16px 12px}.paper-heading{font-size:17px}.paper-heading span{font-size:14px}.below-grid{grid-template-columns:1fr}.other-info label{font-size:18px}.actions .btn{padding:9px 10px;font-size:12px}}
-@media print{body{background:#fff}.nav-strip,.topbar,.toolrow,.below-grid,.hint,.no-print{display:none!important}.paper-shell{border:0;border-radius:0;padding:0;box-shadow:none}.paper{border:0;box-shadow:none;padding:8mm 5mm}.chart-scroll{overflow:visible}.chart-inner,.divider-line{min-width:0;width:100%}.arch-row{gap:7px}.arch-side{grid-template-columns:repeat(8,minmax(30px,1fr));gap:4px;flex:1}.tooth-slot,.tooth{width:auto;min-width:0}.tooth-face{width:36px;height:43px}.primary-tooth .tooth-face{width:31px;height:27px}.tooth-number{font-size:10px}.midline,.divider-midline{width:3px;min-width:3px}.rl-label{font-size:20px}.divider-line{height:45px;margin:8px 0}.divider-midline{height:45px}.paper-heading{font-size:16px}.paper-heading span{font-size:14px}.other-info{margin-top:14px}.other-info label{font-size:17px}.paper-foot{font-size:8px}}
+@media(max-width:740px){.paper-shell{padding:6px;border-radius:11px}.paper{padding:16px 12px}.paper-heading{font-size:17px}.paper-heading span{font-size:14px}.below-grid{grid-template-columns:1fr}.other-info label{font-size:18px}.actions .btn-chart{padding:7px 9px;font-size:12px}}
+@media print{body{background:#fff !important}.odontogram-page{max-width:none;padding:0}.topbar,.toolrow,.below-grid,.hint,.no-print{display:none!important}.paper-shell{border:0;border-radius:0;padding:0;box-shadow:none}.paper{border:0;box-shadow:none;padding:8mm 5mm}.chart-scroll{overflow:visible}.chart-inner,.divider-line{min-width:0;width:100%}.arch-row{gap:7px}.arch-side{grid-template-columns:repeat(8,minmax(30px,1fr));gap:4px;flex:1}.tooth-slot,.tooth{width:auto;min-width:0}.tooth-face{width:36px;height:43px}.primary-tooth .tooth-face{width:31px;height:27px}.tooth-number{font-size:10px}.midline,.divider-midline{width:3px;min-width:3px}.rl-label{font-size:20px}.divider-line{height:45px;margin:8px 0}.divider-midline{height:45px}.paper-heading{font-size:16px}.paper-heading span{font-size:14px}.other-info{margin-top:14px}.other-info label{font-size:17px}.paper-foot{font-size:8px}}
 </style>
-</head>
-<body>
-<div class="nav-strip no-print">
-  <div class="nav-left">
-    <a href="{{ url('/') }}" style="color:#0f172a;font-weight:800;">🦷 Dental System</a>
-    <a href="{{ route('patients.index') }}">Patients</a>
-    <a href="{{ route('dental-charts.index') }}">Charts</a>
-    <a href="{{ route('dental-conditions.index') }}">Conditions</a>
-    <a href="{{ url('/dental') }}" style="color:#2457c5;font-weight:700;">Interactive Chart</a>
-  </div>
-  <div>
-    @if(isset($activeChart))
-      <span>Patient: <strong>{{ $activeChart->patient->full_name }}</strong> (#{{ $activeChart->patient->patient_number }}) · Date: {{ $activeChart->chart_date->format('Y-m-d') }}</span>
-    @else
-      <span style="color:#64748b;">Standalone Demo Mode</span>
-    @endif
-  </div>
-</div>
+@endsection
 
-<div class="page">
+@section('content')
+<div class="odontogram-page">
   <header class="topbar">
     <div>
       <div class="eyebrow">
@@ -143,10 +119,10 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
         @if(isset($activeChart))
           {{ $activeChart->patient->full_name }}'s Dental Chart
         @else
-          Interactive dental chart
+          Interactive Odontogram Chart
         @endif
       </h1>
-      <p class="sub">Click a tooth surface to assign its color and clinical note. Click a tooth number to edit the whole tooth.</p>
+      <p class="sub">Click a tooth surface to assign its condition color and clinical notes. Select a tooth number for a whole-tooth finding.</p>
     </div>
 
     <div class="actions no-print">
@@ -166,10 +142,10 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
         </div>
       @endif
 
-      <button class="btn" type="button" id="printBtn">Print chart</button>
-      <button class="btn" type="button" id="exportBtn">Export JSON</button>
-      <button class="btn btn-danger" type="button" id="resetBtn">Reset</button>
-      <button class="btn btn-primary" type="button" id="saveBtn">Save chart</button>
+      <button class="btn-chart" type="button" id="printBtn">Print</button>
+      <button class="btn-chart" type="button" id="exportBtn">Export JSON</button>
+      <button class="btn-chart btn-chart-danger" type="button" id="resetBtn">Reset</button>
+      <button class="btn-chart btn-chart-primary" type="button" id="saveBtn">Save Chart</button>
     </div>
   </header>
 
@@ -211,9 +187,9 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
       <div class="stat-small">tooth / surface records</div>
       <p id="storageExplanation" class="stat-small" style="line-height:1.6;margin-top:12px">
         @if(isset($activeChart))
-          Connected to database chart #{{ $activeChart->id }}. Click <strong>Save chart</strong> to update database records.
+          Connected to database chart #{{ $activeChart->id }}. Click <strong>Save Chart</strong> to synchronize with PostgreSQL database.
         @else
-          Demo data stays in this browser localStorage. Select a patient's chart above or register one to save directly to database.
+          Demo data stays in browser localStorage. Select a patient's chart above or register one to save directly to database.
         @endif
       </p>
     </div>
@@ -232,12 +208,14 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
       <div class="field"><label for="colorSelect">Marking color</label><div class="color-row"><input id="colorSelect" type="color" value="#d83c43"><span class="color-help">Choose any color for this surface.</span></div></div>
       <div class="field"><label for="statusSelect">Treatment status</label><select id="statusSelect"><option value="observed">Observed</option><option value="planned">Treatment planned</option><option value="in_progress">In progress</option><option value="completed">Completed</option><option value="referred">Referred</option></select></div>
       <div class="field"><label for="noteInput">Note</label><textarea id="noteInput" rows="3" placeholder="Type a note for this tooth surface..."></textarea></div>
-      <div class="modal-actions"><button type="button" class="btn btn-danger" id="deleteBtn">Remove marking</button><div class="modal-actions-right"><button type="button" class="btn" id="cancelBtn">Cancel</button><button type="submit" class="btn btn-primary">Save finding</button></div></div>
+      <div class="modal-actions"><button type="button" class="btn btn-danger btn-sm" id="deleteBtn">Remove marking</button><div class="modal-actions-right"><button type="button" class="btn btn-outline btn-sm" id="cancelBtn">Cancel</button><button type="submit" class="btn btn-primary btn-sm">Save finding</button></div></div>
     </form>
   </div>
 </div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
+@endsection
 
+@section('scripts')
 <script>
 window.DENTAL_SERVER = {
   chart: @json($activeChart ?? null),
@@ -616,5 +594,4 @@ window.DENTAL_SERVER = {
   refreshChart();
 })();
 </script>
-</body>
-</html>
+@endsection

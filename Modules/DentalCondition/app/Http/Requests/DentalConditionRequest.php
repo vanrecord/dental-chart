@@ -31,3 +31,4 @@ class DentalConditionRequest extends FormRequest
         ];
     }
 }
+

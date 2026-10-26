@@ -31,3 +31,4 @@ class ActivityLogger
         Log::channel('single')->info("[ActivityLog] {$action}: {$description}", $payload);
     }
 }
+

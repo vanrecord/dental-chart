@@ -32,3 +32,4 @@ class PatientRequest extends FormRequest
         ];
     }
 }
+

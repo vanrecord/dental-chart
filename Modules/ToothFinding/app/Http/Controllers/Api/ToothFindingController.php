@@ -65,3 +65,4 @@ class ToothFindingController extends Controller
         return response()->json(['message' => 'Tooth finding deleted successfully']);
     }
 }
+

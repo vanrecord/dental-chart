@@ -47,3 +47,4 @@ class DentalViewController extends Controller
         ]);
     }
 }
+

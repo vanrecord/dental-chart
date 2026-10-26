@@ -62,3 +62,4 @@ class PatientController extends Controller
         return response()->json(['message' => 'Patient deleted successfully']);
     }
 }
+

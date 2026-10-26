@@ -36,3 +36,4 @@ class ChartTooth extends Model
         return $this->hasMany(ToothFinding::class, 'chart_tooth_id');
     }
 }
+

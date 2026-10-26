@@ -60,3 +60,4 @@ class DentalConditionController extends Controller
         return response()->json(['message' => 'Dental condition deleted successfully']);
     }
 }
+

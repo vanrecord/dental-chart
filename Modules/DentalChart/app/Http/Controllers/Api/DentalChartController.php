@@ -97,3 +97,4 @@ class DentalChartController extends Controller
         ]);
     }
 }
+

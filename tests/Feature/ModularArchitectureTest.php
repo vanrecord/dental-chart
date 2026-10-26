@@ -39,10 +39,40 @@ class ModularArchitectureTest extends TestCase
     public function test_module_views_are_accessible_via_namespaces(): void
     {
         $this->assertTrue(View::exists('core::layouts.app'), 'core::layouts.app view should exist');
+        $this->assertTrue(View::exists('core::layouts.sidebar'), 'core::layouts.sidebar view should exist');
+        $this->assertTrue(View::exists('core::layouts.header'), 'core::layouts.header view should exist');
         $this->assertTrue(View::exists('core::welcome'), 'core::welcome view should exist');
         $this->assertTrue(View::exists('patient::index'), 'patient::index view should exist');
         $this->assertTrue(View::exists('dentalchart::dental'), 'dentalchart::dental view should exist');
         $this->assertTrue(View::exists('dentalcondition::index'), 'dentalcondition::index view should exist');
+    }
+
+    public function test_collapsible_left_sidebar_renders_across_views(): void
+    {
+        // 1. Dashboard View
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertSee('id="appSidebar"', false);
+        $response->assertSee('id="sidebarToggle"', false);
+        $response->assertSee('id="sidebarBackdrop"', false);
+        $response->assertSee('OdontoCare');
+        $response->assertSee('data-tooltip="Patients"', false);
+        $response->assertSee('data-tooltip="Dental Charts"', false);
+        $response->assertSee('data-tooltip="Interactive Odontogram"', false);
+
+        // 2. Patients View
+        $response = $this->get(route('patients.index'));
+        $response->assertStatus(200);
+        $response->assertSee('app-sidebar', false);
+        $response->assertSee('sidebarToggle', false);
+
+        // 3. Interactive Odontogram View
+        $response = $this->get(url('/dental'));
+        $response->assertStatus(200);
+        $response->assertSee('app-sidebar', false);
+        $response->assertSee('sidebarToggle', false);
+        $response->assertSee('upperPermanent');
+        $response->assertSee('lowerPermanent');
     }
 
     public function test_cross_module_relationships(): void
@@ -159,7 +189,6 @@ class ModularArchitectureTest extends TestCase
         ]);
 
         $logger = app(ActivityLogger::class);
-        // Ensure log method runs without exception
         $logger->log('patient.created', 'New patient registered', $patient, ['source' => 'test']);
         $this->assertTrue(true);
     }

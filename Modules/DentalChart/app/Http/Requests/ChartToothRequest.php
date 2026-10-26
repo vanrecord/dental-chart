@@ -34,3 +34,4 @@ class ChartToothRequest extends FormRequest
         ];
     }
 }
+
