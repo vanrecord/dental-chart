@@ -5,7 +5,7 @@
 **Architecture:** Modular Monolith using `nwidart/laravel-modules` (v11.1.10)  
 **Database:** PostgreSQL compatible schema & data types  
 **Branch:** `feature/modular-architecture`  
-**Status:** All 6 modules implemented, 14 test cases passing (**91 assertions**), routes & views cached with 0 errors.
+**Status:** All 6 modules implemented, collapsible left sidebar integrated, 15 test cases passing (**109 assertions**), routes & views cached with 0 errors.
 
 ---
 
@@ -260,7 +260,30 @@ php artisan test
 
 ---
 
-## 6. Developer & Maintenance Instructions
+## 7. Collapsible Left Sidebar & Responsive Shell
+
+The top navigation bar has been replaced by a responsive collapsible left sidebar and header:
+
+### Components & Partials
+- **Layout Shell:** [`Modules/Core/resources/views/layouts/app.blade.php`](Modules/Core/resources/views/layouts/app.blade.php)
+- **Sidebar Partial:** [`Modules/Core/resources/views/layouts/sidebar.blade.php`](Modules/Core/resources/views/layouts/sidebar.blade.php)
+- **Top Header Partial:** [`Modules/Core/resources/views/layouts/header.blade.php`](Modules/Core/resources/views/layouts/header.blade.php)
+
+### Features
+1. **Desktop Expanded vs. Collapsed Rail:**
+   - **Expanded (250px):** Logo, system title, section headers, SVG icons, text labels, and animated accordion submenus.
+   - **Collapsed Rail (68px):** Reduces width to an icon-only rail. Text labels, arrows, and submenus hide smoothly. Tooltips appear on icon hover using CSS pseudo-elements.
+   - **State Persistence:** Saved in `localStorage.setItem('odonto_sidebar_collapsed', 'true'|'false')`. An inline `<head>` script instantly adds `.sidebar-collapsed` to `<html>` before rendering to eliminate flash of unstyled content.
+2. **Mobile Off-Canvas Drawer (< 992px):**
+   - Sidebar is hidden off-screen (`transform: translateX(-100%)`).
+   - Clicking hamburger toggle button slides the drawer in (`transform: translateX(0)`).
+   - Semi-transparent backdrop overlay (`#sidebarBackdrop`) fades in.
+   - Drawer automatically closes on backdrop click, navigation link click, or pressing `Escape`.
+3. **Interactive Odontogram Integration:**
+   - The interactive chart at [`Modules/DentalChart/resources/views/dental.blade.php`](Modules/DentalChart/resources/views/dental.blade.php) extends the shared layout directly, removing redundant topbars while retaining print-safe stylesheets (`@media print`).
+4. **Keyboard Accessibility & ARIA:**
+   - Includes `role="navigation"`, `aria-label`, `aria-expanded` toggle synchronization, and keyboard listeners.
+
 
 ### Working with Modules
 
