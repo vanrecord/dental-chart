@@ -1,0 +1,11 @@
+{
+    "name": "DentalChart",
+    "alias": "dentalchart",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\DentalChart\\Providers\\DentalChartServiceProvider"
+    ],
+    "files": []
+}

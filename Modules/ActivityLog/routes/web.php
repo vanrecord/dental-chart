@@ -1,0 +1,3 @@
+<?php
+
+// ActivityLog web routes

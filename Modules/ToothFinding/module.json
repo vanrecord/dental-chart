@@ -1,0 +1,11 @@
+{
+    "name": "ToothFinding",
+    "alias": "toothfinding",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\ToothFinding\\Providers\\ToothFindingServiceProvider"
+    ],
+    "files": []
+}

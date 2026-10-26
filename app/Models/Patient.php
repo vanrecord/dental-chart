@@ -2,32 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Patient\Models\Patient as BasePatient;
 
-class Patient extends Model
+/**
+ * Class Patient (Compatibility Proxy)
+ *
+ * @see \Modules\Patient\Models\Patient
+ */
+class Patient extends BasePatient
 {
-    use HasFactory, SoftDeletes;
-
-    protected $fillable = [
-        'patient_number',
-        'full_name',
-        'date_of_birth',
-        'sex',
-        'phone',
-        'address',
-        'medical_notes',
-    ];
-
-    protected $casts = [
-        'date_of_birth' => 'date',
-    ];
-
-    public function dentalCharts(): HasMany
-    {
-        return $this->hasMany(DentalChart::class);
-    }
 }
-

@@ -1,0 +1,30 @@
+{
+    "name": "nwidart/toothfinding",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\ToothFinding\\": "app/",
+            "Modules\\ToothFinding\\Database\\Factories\\": "database/factories/",
+            "Modules\\ToothFinding\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\ToothFinding\\Tests\\": "tests/"
+        }
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "name": "DentalCondition",
+    "alias": "dentalcondition",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\DentalCondition\\Providers\\DentalConditionServiceProvider"
+    ],
+    "files": []
+}

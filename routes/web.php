@@ -1,26 +1,16 @@
 <?php
 
-use App\Http\Controllers\DentalChartController;
-use App\Http\Controllers\DentalConditionController;
-use App\Http\Controllers\DentalViewController;
-use App\Http\Controllers\PatientController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
+|
+| Application routes are modularized across the respective modules:
+| - Core: Modules/Core/routes/web.php (home dashboard)
+| - Patient: Modules/Patient/routes/web.php (patients CRUD)
+| - DentalChart: Modules/DentalChart/routes/web.php (dental-charts CRUD & interactive odontogram)
+| - DentalCondition: Modules/DentalCondition/routes/web.php (dental-conditions CRUD)
+|
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-// Interactive Dental Chart views
-Route::get('/dental', [DentalViewController::class, 'index'])->name('dental.index');
-Route::get('/dental/{dentalChart}', [DentalViewController::class, 'show'])->name('dental.show');
-
-// Resource CRUD Routes
-Route::resource('patients', PatientController::class);
-Route::resource('dental-charts', DentalChartController::class);
-Route::resource('dental-conditions', DentalConditionController::class);

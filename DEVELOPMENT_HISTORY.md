@@ -1,105 +1,131 @@
-# Dental Chart System - Development History & Continuation Guide
+# Dental Chart System - Development History & Modular Architecture Guide
 
-**Project:** Dental Chart Workspace (Laravel 11)  
-**Last Updated:** October 26, 2026  
-**Status:** All CRUD modules, API endpoints, interactive chart integration, database seeders, and automated tests are implemented and passing (60/60 assertions).
-
----
-
-## 1. Executive Summary & Architecture
-
-The application is an interactive clinical dental charting system adhering to the **FDI World Dental Federation two-digit tooth numbering system**:
-- **Permanent Arch (32 teeth):** Quadrants 1 to 4 (`18–11`, `21–28`, `48–41`, `31–38`)
-- **Primary Arch (20 teeth):** Quadrants 5 to 8 (`55–51`, `61–65`, `85–81`, `71–75`)
-- **Interactive Tooth Silhouette:** Each tooth consists of 5 individually clickable surface polygons (`top`, `bottom`, `left`, `right`, `center`) plus whole-tooth selection (`whole`).
-
-The system supports dual-mode operation:
-1. **Interactive Demo / Offline Mode:** Uses `localStorage` cache.
-2. **Database Connected Mode:** Seamlessly loads patient records and synchronizes tooth findings directly with PostgreSQL/MySQL via RESTful API.
+**Project:** Odontogram & Dental Chart Management System  
+**Framework:** Laravel 11.31 + PHP 8.2  
+**Architecture:** Modular Monolith using `nwidart/laravel-modules` (v11.1.10)  
+**Database:** PostgreSQL compatible schema & data types  
+**Branch:** `feature/modular-architecture`  
+**Status:** All 6 modules implemented, 14 test cases passing (**91 assertions**), routes & views cached with 0 errors.
 
 ---
 
-## 2. Work Done (Completed History)
+## 1. Executive Summary & Modular Architecture
 
-### Phase 1: Interactive Blade View & Route
-- **View:** Created [`resources/views/dental.blade.php`](resources/views/dental.blade.php) containing the complete interactive SVG arch layout, modal editor, filter buttons (All / Permanent / Primary), color swatches, JSON export, and print styling.
-- **Route:** Added `/dental` web route.
+The application has been refactored from a traditional monolithic structure into a clean, decoupled **modular architecture** using `nwidart/laravel-modules`. Each business domain is self-contained with its own models, controllers, requests, services, views, migrations, seeders, and routes.
 
-### Phase 2: Database Migration Fixes
-- **Migration Inspected:**
-  1. `2026_01_01_000001_create_patients_table.php` (`patients`)
-  2. `2026_01_01_000002_create_dental_charts_table.php` (`dental_charts`)
-  3. `2026_01_01_000003_create_chart_teeth_table.php` (`chart_teeth`)
-  4. `2026_01_01_000004_create_dental_conditions_table.php` (`dental_conditions`)
-  5. `2026_01_01_000005_create_tooth_findings_table.php` (`tooth_findings`)
-- **Fix:** In `2026_01_01_000005_create_tooth_findings_table.php`, adjusted `$table->foreignId('chart_tooth_id')->constrained('chart_teeth')` to reference the irregular plural `chart_teeth` instead of the Laravel default assumption `chart_tooths`.
-- **Config:** Fixed leading whitespace in `.env` for `DB_DATABASE=dental_chart`.
-
-### Phase 3: Eloquent Models & Relationships
-Created 5 core models with full attributes, casts, and relations:
-- [`app/Models/Patient.php`](app/Models/Patient.php): SoftDeletes, `dentalCharts()` relation.
-- [`app/Models/DentalChart.php`](app/Models/DentalChart.php): `patient()`, `teeth()`, `findings()` (`HasManyThrough`), `creator()`, `updater()`.
-- [`app/Models/ChartTooth.php`](app/Models/ChartTooth.php): Table `chart_teeth`, `dentalChart()`, `findings()`.
-- [`app/Models/DentalCondition.php`](app/Models/DentalCondition.php): `findings()`, `creator()`.
-- [`app/Models/ToothFinding.php`](app/Models/ToothFinding.php): SoftDeletes, `chartTooth()`, `condition()`, `creator()`, `updater()`.
-
-### Phase 4: Form Requests (Validation Layer)
-- [`PatientRequest.php`](app/Http/Requests/PatientRequest.php): Handles unique constraint with ignore on update.
-- [`DentalChartRequest.php`](app/Http/Requests/DentalChartRequest.php): Validates patient and chart dates.
-- [`ChartToothRequest.php`](app/Http/Requests/ChartToothRequest.php): Composite unique validation `['dental_chart_id', 'tooth_number']`.
-- [`DentalConditionRequest.php`](app/Http/Requests/DentalConditionRequest.php): Validates condition codes and hex color regex (`/^#[0-9a-fA-F]{6}$/`).
-- [`ToothFindingRequest.php`](app/Http/Requests/ToothFindingRequest.php): Validates surfaces and clinical treatment statuses.
-- [`SyncChartFindingsRequest.php`](app/Http/Requests/SyncChartFindingsRequest.php): Validates bulk findings sent by the interactive frontend.
-
-### Phase 5: Web UI & CRUD Controllers
-- **Shared Layout:** [`resources/views/layouts/app.blade.php`](resources/views/layouts/app.blade.php) with top navigation and alerts.
-- **Home Dashboard:** [`resources/views/welcome.blade.php`](resources/views/welcome.blade.php).
-- **Patient Management:** [`app/Http/Controllers/PatientController.php`](app/Http/Controllers/PatientController.php) with full views (`index`, `create`, `edit`, `show`).
-- **Dental Charts Management:** [`app/Http/Controllers/DentalChartController.php`](app/Http/Controllers/DentalChartController.php) with views (`index`, `create`, `edit`).
-- **Condition Settings & Legend:** [`app/Http/Controllers/DentalConditionController.php`](app/Http/Controllers/DentalConditionController.php) with views (`index`, `create`, `edit`).
-- **Interactive Chart Controller:** [`app/Http/Controllers/DentalViewController.php`](app/Http/Controllers/DentalViewController.php) handling `/dental` and `/dental/{chart}`.
-
-### Phase 6: RESTful API Layer ([`routes/api.php`](routes/api.php))
-Created dedicated API controllers under `app/Http/Controllers/Api/`:
-- `Api/PatientController.php` (`GET|POST /api/patients`, `GET|PUT|DELETE /api/patients/{id}`)
-- `Api/DentalChartController.php` (`GET|POST /api/dental-charts`, `GET|PUT|DELETE /api/dental-charts/{id}`)
-- `POST /api/dental-charts/{id}/sync-findings`: Bulk upsert/delete of tooth findings.
-- `Api/ChartToothController.php` (`/api/chart-teeth`)
-- `Api/DentalConditionController.php` (`/api/dental-conditions`)
-- `Api/ToothFindingController.php` (`/api/tooth-findings`)
-
-### Phase 7: Seeders & Database Initialization
-- [`database/seeders/DentalConditionSeeder.php`](database/seeders/DentalConditionSeeder.php): Seeds 8 clinical conditions:
-  - Caries / decay (`#d83c43`)
-  - Existing restoration (`#2f66cf`)
-  - Treatment planned (`#e59b26`)
-  - Completed treatment (`#319b62`)
-  - Missing tooth (`#707782`)
-  - Crown (`#8b5bc7`)
-  - Fracture (`#8a5a38`)
-  - Sealant (`#169d9a`)
-- [`database/seeders/DatabaseSeeder.php`](database/seeders/DatabaseSeeder.php): Seeds default doctor user, condition catalog, sample patient (`Jane Williams`), and chart with tooth 23 finding.
-
-### Phase 8: Testing & Verification
-- Test suites:
-  - [`tests/Feature/DentalCrudTest.php`](tests/Feature/DentalCrudTest.php): Tests seeder, web CRUD, finding sync, and interactive views.
-  - [`tests/Feature/DentalApiTest.php`](tests/Feature/DentalApiTest.php): Tests API endpoints for patients, conditions, teeth, and findings.
-- **Results:** 9 test cases passed with **60 assertions** (100% green).
+```
+dental-chart/
+├── Modules/
+│   ├── Core/               # Shared layouts, base components, home dashboard
+│   ├── Patient/            # Patient management, history, and records
+│   ├── DentalChart/        # Odontogram charts, FDI teeth, interactive chart view & sync service
+│   ├── DentalCondition/    # Condition diagnoses catalog, legend guide & color palettes
+│   ├── ToothFinding/       # Tooth surface findings, treatments, clinical notes
+│   └── ActivityLog/        # ActivityLogger service for clinical audit trails
+├── app/                    # Compatibility proxies (inheriting from Modules for 100% backward compatibility)
+├── bootstrap/app.php       # Laravel 11 application routing & middleware configuration
+├── config/modules.php      # Laravel Modules configuration
+└── tests/Feature/          # Automated regression & modular architecture test suite
+```
 
 ---
 
-## 3. Database Schema Overview
+## 2. Module Specifications & Responsibilities
+
+### 1. `Core` Module (`Modules/Core`)
+- **Namespace:** `Modules\Core`
+- **View Namespace:** `core::`
+- **Purpose:** Central shared application shell, common layouts, and dashboard.
+- **Key Files:**
+  - Layout: `Modules/Core/resources/views/layouts/app.blade.php`
+  - Dashboard: `Modules/Core/resources/views/welcome.blade.php`
+  - Controller: `Modules\Core\Http\Controllers\CoreController`
+  - Routes: `GET /` (`name: home`), `GET /api/health`
+
+### 2. `Patient` Module (`Modules/Patient`)
+- **Namespace:** `Modules\Patient`
+- **View Namespace:** `patient::`
+- **Purpose:** Manages patient demographics, medical history, and related dental charts.
+- **Key Files:**
+  - Model: `Modules\Patient\Models\Patient` (with `SoftDeletes` and `dentalCharts()` relation)
+  - Requests: `Modules\Patient\Http\Requests\PatientRequest`
+  - Controllers:
+    - Web: `Modules\Patient\Http\Controllers\PatientController`
+    - API: `Modules\Patient\Http\Controllers\Api\PatientController`
+  - Views: `index.blade.php`, `create.blade.php`, `edit.blade.php`, `show.blade.php`
+  - Migration: `2026_01_01_000001_create_patients_table.php`
+  - Routes: `resource('patients')`, `apiResource('patients')`
+
+### 3. `DentalChart` Module (`Modules/DentalChart`)
+- **Namespace:** `Modules\DentalChart`
+- **View Namespace:** `dentalchart::`
+- **Purpose:** Manages odontogram examination charts, FDI two-digit tooth numbering, and interactive tooth surface rendering.
+- **Key Files:**
+  - Models:
+    - `Modules\DentalChart\Models\DentalChart`
+    - `Modules\DentalChart\Models\ChartTooth`
+  - Service: `Modules\DentalChart\Services\DentalChartSyncService` (executes database transactions to upsert teeth and surface findings from the chart editor)
+  - Requests:
+    - `DentalChartRequest`
+    - `ChartToothRequest`
+    - `SyncChartFindingsRequest`
+  - Controllers:
+    - Web: `DentalChartController`, `DentalViewController`
+    - API: `Api\DentalChartController`, `Api\ChartToothController`
+  - Views:
+    - `dental.blade.php` (interactive 5-surface SVG chart with FDI layout)
+    - `index.blade.php`, `create.blade.php`, `edit.blade.php`
+  - Migrations:
+    - `2026_01_01_000002_create_dental_charts_table.php`
+    - `2026_01_01_000003_create_chart_teeth_table.php`
+  - Routes:
+    - Web: `resource('dental-charts')`, `GET /dental`, `GET /dental/{chart}`
+    - API: `apiResource('dental-charts')`, `POST /api/dental-charts/{chart}/sync-findings`, `apiResource('chart-teeth')`
+
+### 4. `DentalCondition` Module (`Modules/DentalCondition`)
+- **Namespace:** `Modules\DentalCondition`
+- **View Namespace:** `dentalcondition::`
+- **Purpose:** Manages clinical condition definitions, category flags, and hex marking colors.
+- **Key Files:**
+  - Model: `Modules\DentalCondition\Models\DentalCondition`
+  - Request: `DentalConditionRequest`
+  - Controllers:
+    - Web: `DentalConditionController`
+    - API: `Api\DentalConditionController`
+  - Views: `index.blade.php`, `create.blade.php`, `edit.blade.php`
+  - Migration: `2026_01_01_000004_create_dental_conditions_table.php`
+  - Seeder: `DentalConditionDatabaseSeeder` (seeds Caries, Restoration, Planned, Completed, Missing, Crown, Fracture, Sealant)
+  - Routes: `resource('dental-conditions')`, `apiResource('dental-conditions')`
+
+### 5. `ToothFinding` Module (`Modules/ToothFinding`)
+- **Namespace:** `Modules\ToothFinding`
+- **Purpose:** Records granular clinical findings on individual tooth surfaces (`top`, `bottom`, `left`, `right`, `center`, `whole`).
+- **Key Files:**
+  - Model: `Modules\ToothFinding\Models\ToothFinding` (with `SoftDeletes`, links `ChartTooth` and `DentalCondition`)
+  - Request: `ToothFindingRequest`
+  - Controller: `Api\ToothFindingController`
+  - Migration: `2026_01_01_000005_create_tooth_findings_table.php` (with explicit foreign key to `chart_teeth`)
+  - Routes: `apiResource('tooth-findings')`
+
+### 6. `ActivityLog` Module (`Modules/ActivityLog`)
+- **Namespace:** `Modules\ActivityLog`
+- **Purpose:** Provides centralized clinical audit logging for patient and chart operations.
+- **Key Files:**
+  - Service: `Modules\ActivityLog\Services\ActivityLogger` (`log($action, $description, $subject, $properties)`)
+  - Status Route: `GET /api/activity-logs/status`
+
+---
+
+## 3. Database Schema & Cross-Module Relationships
 
 ```mermaid
 erDiagram
-    PATIENTS ||--o{ DENTAL_CHARTS : "has"
-    USERS ||--o{ DENTAL_CHARTS : "creates/updates"
-    DENTAL_CHARTS ||--o{ CHART_TEETH : "contains"
-    CHART_TEETH ||--o{ TOOTH_FINDINGS : "has"
-    DENTAL_CONDITIONS ||--o{ TOOTH_FINDINGS : "categorizes"
-    USERS ||--o{ TOOTH_FINDINGS : "records"
+    PATIENT_MODULE ||--o{ DENTAL_CHART_MODULE : "Patient hasMany DentalCharts"
+    DENTAL_CHART_MODULE ||--o{ CHART_TEETH : "DentalChart hasMany ChartTeeth"
+    CHART_TEETH ||--o{ TOOTH_FINDING_MODULE : "ChartTooth hasMany ToothFindings"
+    DENTAL_CONDITION_MODULE ||--o{ TOOTH_FINDING_MODULE : "Condition categorizes Finding"
 
-    PATIENTS {
+    PATIENT_MODULE {
         bigint id PK
         string patient_number UK
         string full_name
@@ -112,7 +138,7 @@ erDiagram
         timestamp deleted_at
     }
 
-    DENTAL_CHARTS {
+    DENTAL_CHART_MODULE {
         bigint id PK
         bigint patient_id FK
         date chart_date
@@ -133,7 +159,7 @@ erDiagram
         timestamps created_at
     }
 
-    DENTAL_CONDITIONS {
+    DENTAL_CONDITION_MODULE {
         bigint id PK
         string name
         string code UK
@@ -144,7 +170,7 @@ erDiagram
         timestamps created_at
     }
 
-    TOOTH_FINDINGS {
+    TOOTH_FINDING_MODULE {
         bigint id PK
         bigint chart_tooth_id FK
         bigint dental_condition_id FK
@@ -159,68 +185,114 @@ erDiagram
 
 ---
 
-## 4. Key Route Directory
+## 4. Route Directory (All Modular)
 
 ### Web Routes
-- `GET /` -> Welcome dashboard
-- `GET /dental` -> Interactive chart (standalone or chart selector)
-- `GET /dental/{chart}` -> Interactive chart for a specific patient session
-- `GET|POST /patients` -> Patient index & store
-- `GET /patients/create` -> New patient form
-- `GET|PUT|DELETE /patients/{patient}` -> Patient details, update, delete
-- `GET /patients/{patient}/edit` -> Edit patient form
-- `GET|POST /dental-charts` -> Dental charts list & store
-- `GET /dental-charts/create` -> Create chart for patient
-- `GET|PUT|DELETE /dental-charts/{chart}` -> Chart details, update, delete
-- `GET /dental-charts/{chart}/edit` -> Edit chart form
-- `GET|POST /dental-conditions` -> Condition list & store
-- `GET /dental-conditions/create` -> New condition form
-- `GET|PUT|DELETE /dental-conditions/{condition}` -> Update & delete condition
-- `GET /dental-conditions/{condition}/edit` -> Edit condition form
+| Module | Method | URI | Route Name | Action |
+|---|---|---|---|---|
+| **Core** | `GET` | `/` | `home` | `CoreController@index` |
+| **Patient** | `GET` | `/patients` | `patients.index` | `PatientController@index` |
+| **Patient** | `GET` | `/patients/create` | `patients.create` | `PatientController@create` |
+| **Patient** | `POST` | `/patients` | `patients.store` | `PatientController@store` |
+| **Patient** | `GET` | `/patients/{patient}` | `patients.show` | `PatientController@show` |
+| **Patient** | `GET` | `/patients/{patient}/edit` | `patients.edit` | `PatientController@edit` |
+| **Patient** | `PUT` | `/patients/{patient}` | `patients.update` | `PatientController@update` |
+| **Patient** | `DELETE` | `/patients/{patient}` | `patients.destroy` | `PatientController@destroy` |
+| **DentalChart** | `GET` | `/dental-charts` | `dental-charts.index` | `DentalChartController@index` |
+| **DentalChart** | `GET` | `/dental-charts/create` | `dental-charts.create` | `DentalChartController@create` |
+| **DentalChart** | `POST` | `/dental-charts` | `dental-charts.store` | `DentalChartController@store` |
+| **DentalChart** | `GET` | `/dental-charts/{chart}` | `dental-charts.show` | `DentalChartController@show` |
+| **DentalChart** | `GET` | `/dental-charts/{chart}/edit`| `dental-charts.edit` | `DentalChartController@edit` |
+| **DentalChart** | `PUT` | `/dental-charts/{chart}` | `dental-charts.update` | `DentalChartController@update` |
+| **DentalChart** | `DELETE`| `/dental-charts/{chart}` | `dental-charts.destroy`| `DentalChartController@destroy`|
+| **DentalChart** | `GET` | `/dental` | `dental.index` | `DentalViewController@index` |
+| **DentalChart** | `GET` | `/dental/{dentalChart}` | `dental.show` | `DentalViewController@show` |
+| **DentalCondition** | `GET` | `/dental-conditions` | `dental-conditions.index` | `DentalConditionController@index` |
+| **DentalCondition** | `GET` | `/dental-conditions/create` | `dental-conditions.create` | `DentalConditionController@create` |
+| **DentalCondition** | `POST` | `/dental-conditions` | `dental-conditions.store` | `DentalConditionController@store` |
+| **DentalCondition** | `GET` | `/dental-conditions/{condition}/edit` | `dental-conditions.edit` | `DentalConditionController@edit` |
+| **DentalCondition** | `PUT` | `/dental-conditions/{condition}` | `dental-conditions.update` | `DentalConditionController@update` |
+| **DentalCondition** | `DELETE` | `/dental-conditions/{condition}` | `dental-conditions.destroy` | `DentalConditionController@destroy` |
 
-### API Routes (Prefix: `/api`, Name: `api.*`)
-- `/api/patients` -> `Api\PatientController`
-- `/api/dental-charts` -> `Api\DentalChartController`
-- `/api/dental-charts/{chart}/sync-findings` -> Bulk sync findings
-- `/api/chart-teeth` -> `Api\ChartToothController`
-- `/api/dental-conditions` -> `Api\DentalConditionController`
-- `/api/tooth-findings` -> `Api\ToothFindingController`
+### API Routes (Prefix: `/api`, Name Prefix: `api.*`)
+| Module | Method | URI | Route Name | Action |
+|---|---|---|---|---|
+| **Core** | `GET` | `/api/health` | `api.health` | Health check endpoint |
+| **Patient** | `GET\|POST` | `/api/patients` | `api.patients.index\|store` | `Api\PatientController` |
+| **Patient** | `GET\|PUT\|DELETE` | `/api/patients/{patient}` | `api.patients.show\|update\|destroy` | `Api\PatientController` |
+| **DentalChart** | `GET\|POST` | `/api/dental-charts` | `api.dental-charts.index\|store` | `Api\DentalChartController` |
+| **DentalChart** | `POST` | `/api/dental-charts/{chart}/sync-findings` | `api.dental-charts.sync-findings` | `Api\DentalChartController@syncFindings` |
+| **DentalChart** | `GET\|PUT\|DELETE` | `/api/dental-charts/{chart}` | `api.dental-charts.show\|update\|destroy` | `Api\DentalChartController` |
+| **DentalChart** | `GET\|POST` | `/api/chart-teeth` | `api.chart-teeth.index\|store` | `Api\ChartToothController` |
+| **DentalChart** | `GET\|PUT\|DELETE` | `/api/chart-teeth/{tooth}` | `api.chart-teeth.show\|update\|destroy` | `Api\ChartToothController` |
+| **DentalCondition** | `GET\|POST` | `/api/dental-conditions` | `api.dental-conditions.index\|store` | `Api\DentalConditionController` |
+| **DentalCondition** | `GET\|PUT\|DELETE` | `/api/dental-conditions/{cond}` | `api.dental-conditions.show\|update\|destroy` | `Api\DentalConditionController` |
+| **ToothFinding** | `GET\|POST` | `/api/tooth-findings` | `api.tooth-findings.index\|store` | `Api\ToothFindingController` |
+| **ToothFinding** | `GET\|PUT\|DELETE` | `/api/tooth-findings/{finding}` | `api.tooth-findings.show\|update\|destroy` | `Api\ToothFindingController` |
+| **ActivityLog** | `GET` | `/api/activity-logs/status` | `api.activity-logs.status` | Status endpoint |
 
 ---
 
-## 5. Checklist for Continuing Our Work
+## 5. Verification & Automated Tests
 
-Here is the prioritized checklist to continue building the system:
+All tests execute with **100% pass rate** (14 tests, **91 assertions**):
 
-### 1. Database Connection & Migration (Local Environment)
-- [ ] Ensure PostgreSQL (or MySQL) service is running:
-  ```bash
-  # Check status
-  service postgresql status
-  ```
-- [ ] Run migrations and seed data:
-  ```bash
-  php artisan migrate --seed
-  ```
-  *(This will load the default dental condition palette and the sample patient chart).*
-
-### 2. Authentication & Multi-User Integration
-- [ ] Install Laravel Breeze or Jetstream if doctor/staff login is required:
-  ```bash
-  composer require laravel/breeze --dev
-  php artisan breeze:install blade
-  ```
-- [ ] Link `Auth::id()` automatically to `created_by` / `updated_by` fields on charts and tooth findings.
-
-### 3. Patient Chart Enhancements
-- [ ] **Chart History Comparison:** Add side-by-side view comparing baseline vs current examination chart.
-- [ ] **Treatment Plan & Cost Estimation:** Link `treatment_status` (`planned`, `in_progress`, `completed`) to procedure fees / invoice generation.
-- [ ] **Periodontal Charting:** Add pocket depth (PD), bleeding on probing (BOP), and gingival recession inputs.
-- [ ] **PDF Export:** Implement DomPDF or Snappy/Browsershot to generate printable medical dental charts with clinic logo and doctor signature line.
-
-### 4. Running Tests
-Whenever new features or changes are made, run the automated suite:
 ```bash
 php artisan test
 ```
 
+### Test Breakdown:
+- [`Tests\Feature\ModularArchitectureTest`](tests/Feature/ModularArchitectureTest.php):
+  - `test_all_modules_are_registered_and_enabled`
+  - `test_module_views_are_accessible_via_namespaces`
+  - `test_cross_module_relationships`
+  - `test_dental_chart_sync_service`
+  - `test_activity_logger_service`
+- [`Tests\Feature\DentalCrudTest`](tests/Feature/DentalCrudTest.php):
+  - Database seeder execution
+  - Patient web CRUD
+  - DentalCondition web CRUD
+  - DentalChart web CRUD & interactive chart sync
+- [`Tests\Feature\DentalApiTest`](tests/Feature/DentalApiTest.php):
+  - Patient REST API endpoints
+  - DentalCondition REST API endpoints
+  - ChartTooth & ToothFinding REST API endpoints
+
+---
+
+## 6. Developer & Maintenance Instructions
+
+### Working with Modules
+
+#### List Modules
+```bash
+php artisan module:list
+```
+
+#### Generate a New Module Component
+```bash
+# Generate controller in DentalChart module
+php artisan module:make-controller MyController DentalChart
+
+# Generate model in Patient module
+php artisan module:make-model MyModel Patient
+
+# Generate migration in ToothFinding module
+php artisan module:make-migration create_my_table ToothFinding
+```
+
+#### Run Modular Migrations
+```bash
+# Migrate all modules
+php artisan module:migrate
+
+# Seed all modules
+php artisan module:seed
+```
+
+#### Clear & Cache Application
+```bash
+php artisan optimize:clear
+php artisan view:cache
+php artisan route:cache
+```

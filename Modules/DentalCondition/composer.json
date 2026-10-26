@@ -1,0 +1,30 @@
+{
+    "name": "nwidart/dentalcondition",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\DentalCondition\\": "app/",
+            "Modules\\DentalCondition\\Database\\Factories\\": "database/factories/",
+            "Modules\\DentalCondition\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\DentalCondition\\Tests\\": "tests/"
+        }
+    }
+}
