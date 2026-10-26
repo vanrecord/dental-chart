@@ -46,6 +46,7 @@ class UserRequest extends FormRequest
             ],
             'roles' => ['nullable', 'array'],
             'roles.*' => ['exists:roles,id'],
+            'is_super_addmin' => ['nullable', 'boolean'],
         ];
     }
 }

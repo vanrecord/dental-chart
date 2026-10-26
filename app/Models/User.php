@@ -23,6 +23,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'is_super_addmin',
     ];
 
     /**
@@ -45,6 +46,23 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_super_addmin' => 'boolean',
         ];
+    }
+
+    /**
+     * Alias accessor for is_super_admin.
+     */
+    public function getIsSuperAdminAttribute(): bool
+    {
+        return (bool) ($this->attributes['is_super_addmin'] ?? false);
+    }
+
+    /**
+     * Alias mutator for is_super_admin.
+     */
+    public function setIsSuperAdminAttribute(mixed $value): void
+    {
+        $this->attributes['is_super_addmin'] = (bool) $value;
     }
 }

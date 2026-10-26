@@ -338,4 +338,104 @@ class UserAndRbacTest extends TestCase
         $response->assertRedirect(route('roles.index'));
         $this->assertDatabaseHas('roles', ['id' => $superRole->id]);
     }
+
+    public function test_create_and_edit_user_screen_has_is_super_addmin_boolean_input(): void
+    {
+        $adminUser = User::where('email', 'doctor@example.com')->first();
+        $this->actingAs($adminUser);
+
+        // 1. Create user screen displays is_super_addmin boolean input
+        $response = $this->get(route('users.create'));
+        $response->assertStatus(200);
+        $response->assertSee('name="is_super_addmin"', false);
+        $response->assertSee('Super Administrator (is_super_addmin)');
+        $response->assertSee('type="checkbox"', false);
+
+        // 2. Create user with is_super_addmin set to true (1)
+        $postData = [
+            'name' => 'Custom Super Admin User',
+            'username' => 'custom_super',
+            'email' => 'custom_super@example.com',
+            'password' => 'secret123',
+            'password_confirmation' => 'secret123',
+            'is_super_addmin' => '1',
+            'roles' => [],
+        ];
+        $response = $this->post(route('users.store'), $postData);
+        $response->assertRedirect(route('users.index'));
+
+        $createdUser = User::where('username', 'custom_super')->first();
+        $this->assertNotNull($createdUser);
+        $this->assertTrue($createdUser->is_super_addmin);
+        $this->assertTrue($createdUser->isSuperAdmin());
+
+        // 3. Edit user screen displays is_super_addmin checked for this user
+        $response = $this->get(route('users.edit', $createdUser));
+        $response->assertStatus(200);
+        $response->assertSee('name="is_super_addmin"', false);
+        $response->assertSee('checked', false);
+
+        // 4. Update user to uncheck is_super_addmin (set to 0)
+        $updateData = [
+            'name' => 'Custom Super Admin User',
+            'username' => 'custom_super',
+            'email' => 'custom_super@example.com',
+            'is_super_addmin' => '0',
+            'roles' => [],
+        ];
+        $response = $this->put(route('users.update', $createdUser), $updateData);
+        $response->assertRedirect(route('users.index'));
+
+        $createdUser->refresh();
+        $this->assertFalse($createdUser->is_super_addmin);
+        $this->assertFalse($createdUser->isSuperAdmin());
+    }
+
+    public function test_user_with_is_super_addmin_true_can_manage_all_menus_and_functions(): void
+    {
+        // Create user with is_super_addmin = true and ZERO roles assigned
+        $standaloneSuper = User::factory()->create([
+            'name' => 'Standalone Super User',
+            'username' => 'standalone_super',
+            'email' => 'standalone_super@example.com',
+            'is_super_addmin' => true,
+        ]);
+
+        $this->assertTrue($standaloneSuper->is_super_addmin);
+        $this->assertTrue($standaloneSuper->isSuperAdmin());
+        $this->assertCount(0, $standaloneSuper->roles);
+
+        // 1. Permission checks via Gate allow arbitrary permissions
+        $this->assertTrue($standaloneSuper->can('users:users:view'));
+        $this->assertTrue($standaloneSuper->can('users:users:create'));
+        $this->assertTrue($standaloneSuper->can('users:roles:delete'));
+        $this->assertTrue($standaloneSuper->can('patient:patients:delete'));
+        $this->assertTrue($standaloneSuper->can('odontogram:dental_chart:delete'));
+        $this->assertTrue($standaloneSuper->can('conditions:dental_condition:delete'));
+        $this->assertTrue($standaloneSuper->can('any:future:permission'));
+
+        // 2. All permissions collection returned
+        $this->assertNotEmpty($standaloneSuper->getAllPermissions());
+
+        // 3. Acting as this user, can see and access ALL menus and screens
+        $this->actingAs($standaloneSuper);
+
+        $response = $this->get('/dashboard');
+        $response->assertStatus(200);
+        $response->assertSee('data-tooltip="Dashboard"', false);
+        $response->assertSee('data-tooltip="Patients"', false);
+        $response->assertSee('data-tooltip="Dental Charts"', false);
+        $response->assertSee('data-tooltip="Interactive Odontogram"', false);
+        $response->assertSee('data-tooltip="Conditions & Legend"', false);
+        $response->assertSee('data-tooltip="Users"', false);
+        $response->assertSee('data-tooltip="Roles & Permissions"', false);
+        $response->assertSee('data-tooltip="API Health"', false);
+
+        // 4. Can access all management controllers
+        $this->get(route('patients.index'))->assertStatus(200);
+        $this->get(route('dental-charts.index'))->assertStatus(200);
+        $this->get(route('dental-conditions.index'))->assertStatus(200);
+        $this->get(route('users.index'))->assertStatus(200)->assertSee('+ Create User');
+        $this->get(route('roles.index'))->assertStatus(200)->assertSee('+ Create Role');
+    }
 }

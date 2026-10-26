@@ -28,6 +28,13 @@
                 <div style="color: #0369a1; font-weight: 600; font-size: 0.875rem; margin-top: 2px;">{{ '@' . $user->username }}</div>
             @endif
             <div style="color: var(--text-muted); font-size: 0.8125rem; margin-top: 2px;">{{ $user->email }}</div>
+            @if($user->is_super_addmin)
+                <div style="margin-top: 8px;">
+                    <span class="badge" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a; font-size: 0.75rem; font-weight: 700; padding: 3px 8px;">
+                        ★ Super Administrator (is_super_addmin: true)
+                    </span>
+                </div>
+            @endif
         </div>
 
         <div style="border-top: 1px solid #e2e8f0; padding-top: 1rem; margin-top: 0.5rem;">
@@ -48,6 +55,7 @@
 
         <div style="border-top: 1px solid #e2e8f0; padding-top: 1rem; margin-top: 1rem; font-size: 0.8125rem; color: var(--text-muted);">
             <div><strong>Username:</strong> {{ $user->username ? '@' . $user->username : '—' }}</div>
+            <div style="margin-top: 4px;"><strong>is_super_addmin:</strong> <span class="badge" style="background: {{ $user->is_super_addmin ? '#ecfdf5' : '#f1f5f9' }}; color: {{ $user->is_super_addmin ? '#065f46' : '#64748b' }}; border: 1px solid {{ $user->is_super_addmin ? '#a7f3d0' : '#e2e8f0' }}; font-size: 0.75rem;">{{ $user->is_super_addmin ? 'true' : 'false' }}</span></div>
             <div style="margin-top: 4px;"><strong>Created:</strong> {{ $user->created_at ? $user->created_at->format('M d, Y') : '—' }}</div>
             <div style="margin-top: 4px;"><strong>Updated:</strong> {{ $user->updated_at ? $user->updated_at->format('M d, Y') : '—' }}</div>
         </div>
@@ -62,14 +70,14 @@
                     Active permissions granted through assigned roles (displayed with friendly labels).
                 </p>
             </div>
-            @if($user->hasRole('admin'))
+            @if($user->is_super_addmin || $user->hasRole('admin'))
                 <span class="badge" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a;">
                     Super Administrator (All Access)
                 </span>
             @endif
         </div>
 
-        @if($effectivePermissions->isEmpty() && ! $user->hasRole('admin'))
+        @if($effectivePermissions->isEmpty() && ! $user->is_super_addmin && ! $user->hasRole('admin'))
             <div style="padding: 2rem; text-align: center; color: var(--text-muted);">
                 This user currently has no granted permissions.
             </div>

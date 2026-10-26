@@ -71,6 +71,7 @@ class UserController extends Controller
             'username' => $validated['username'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'is_super_addmin' => $request->boolean('is_super_addmin'),
         ]);
 
         if (! empty($validated['roles'])) {
@@ -120,6 +121,7 @@ class UserController extends Controller
             'name' => $validated['name'],
             'username' => $validated['username'],
             'email' => $validated['email'],
+            'is_super_addmin' => $request->boolean('is_super_addmin'),
         ];
 
         if (! empty($validated['password'])) {

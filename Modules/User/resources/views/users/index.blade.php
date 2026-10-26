@@ -72,6 +72,13 @@
                                             {{ '@' . $user->username }}
                                         </div>
                                     @endif
+                                    @if($user->is_super_addmin)
+                                        <div style="margin-top: 2px;">
+                                            <span class="badge" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a; font-size: 0.7rem; font-weight: 700; padding: 1px 6px;">
+                                                ★ Super Admin
+                                            </span>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </td>

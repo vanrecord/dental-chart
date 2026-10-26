@@ -40,12 +40,14 @@ class SuperAdminSeeder extends Seeder
                 'name' => env('SUPER_ADMIN_NAME', 'Super Administrator'),
                 'username' => $username,
                 'password' => Hash::make(env('SUPER_ADMIN_PASSWORD', 'password')),
+                'is_super_addmin' => true,
             ]
         );
 
-        if (empty($superAdmin->username)) {
-            $superAdmin->update(['username' => $username]);
-        }
+        $superAdmin->update([
+            'username' => $username,
+            'is_super_addmin' => true,
+        ]);
 
         // Ensure super-admin role is assigned
         if (! $superAdmin->hasRole('super-admin')) {

@@ -73,7 +73,9 @@ trait HasRolesAndPermissions
      */
     public function isSuperAdmin(): bool
     {
-        return $this->hasRole(['super-admin', 'super_admin']);
+        return (bool) ($this->is_super_addmin ?? false)
+            || (bool) ($this->is_super_admin ?? false)
+            || $this->hasRole(['super-admin', 'super_admin']);
     }
 
     /**
@@ -84,7 +86,7 @@ trait HasRolesAndPermissions
         $permissionKey = strtolower(trim($permissionName));
 
         // Super Admin or Admin role has all permissions by default
-        if ($this->hasRole(['super-admin', 'super_admin', 'admin'])) {
+        if ($this->isSuperAdmin() || $this->hasRole(['super-admin', 'super_admin', 'admin'])) {
             return true;
         }
 
@@ -102,7 +104,7 @@ trait HasRolesAndPermissions
      */
     public function getAllPermissions(): Collection
     {
-        if ($this->hasRole(['super-admin', 'super_admin', 'admin'])) {
+        if ($this->isSuperAdmin() || $this->hasRole(['super-admin', 'super_admin', 'admin'])) {
             return Permission::all();
         }
 

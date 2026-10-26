@@ -61,6 +61,19 @@
             </div>
         </div>
 
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; margin-bottom: 1.25rem;">
+            <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; margin: 0;">
+                <input type="hidden" name="is_super_addmin" value="0">
+                <input type="checkbox" name="is_super_addmin" id="is_super_addmin" value="1" {{ old('is_super_addmin', $user->is_super_addmin) ? 'checked' : '' }} style="margin-top: 3px; width: 18px; height: 18px; accent-color: var(--primary);">
+                <div>
+                    <strong style="font-size: 0.875rem; color: #0f172a; display: block;">Super Administrator (is_super_addmin)</strong>
+                    <span style="color: var(--text-muted); font-size: 0.8125rem; display: block; line-height: 1.4; margin-top: 2px;">
+                        When enabled (<code style="background: #e2e8f0; padding: 1px 4px; border-radius: 4px; font-size: 0.75rem;">true</code>), this user can view and manage all menus, modules, and functions across the entire system.
+                    </span>
+                </div>
+            </label>
+        </div>
+
         <div class="form-group">
             <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Assign Roles</label>
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; margin-top: 0.5rem;">
