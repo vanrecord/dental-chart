@@ -98,24 +98,50 @@ class AuthenticationTest extends TestCase
 
     public function test_unauthenticated_user_accessing_protected_routes_is_redirected_to_login(): void
     {
-        // Unauthenticated access to user management
-        $response = $this->get(route('users.index'));
-        $response->assertRedirect(route('login'));
-
-        // Unauthenticated access to role management
-        $response = $this->get(route('roles.index'));
-        $response->assertRedirect(route('login'));
+        // Protected routes must all redirect unauthenticated guests to login
+        $this->get('/')->assertRedirect(route('login'));
+        $this->get('/dashboard')->assertRedirect(route('login'));
+        $this->get(route('patients.index'))->assertRedirect(route('login'));
+        $this->get(route('dental-charts.index'))->assertRedirect(route('login'));
+        $this->get(url('/dental'))->assertRedirect(route('login'));
+        $this->get(route('dental-conditions.index'))->assertRedirect(route('login'));
+        $this->get(route('users.index'))->assertRedirect(route('login'));
+        $this->get(route('roles.index'))->assertRedirect(route('login'));
     }
 
-    public function test_authenticated_admin_can_access_protected_pages(): void
+    public function test_authenticated_user_accesses_pages_according_to_assigned_roles_and_permissions(): void
     {
-        $user = User::where('email', 'doctor@example.com')->first();
-        $this->actingAs($user);
+        // 1. Receptionist: Can access patients, but NOT users or dental charts
+        $receptionistRole = \Modules\User\Models\Role::where('name', 'receptionist')->first();
+        $receptionist = User::factory()->create();
+        $receptionist->assignRole($receptionistRole);
 
-        $response = $this->get(route('users.index'));
-        $response->assertStatus(200);
+        $this->actingAs($receptionist);
+        $this->get(route('patients.index'))->assertStatus(200);
+        $this->get(route('dental-charts.index'))->assertStatus(403);
+        $this->get(route('users.index'))->assertStatus(403);
 
-        $response = $this->get(route('roles.index'));
-        $response->assertStatus(200);
+        // 2. Dentist: Can access patients, charts, and odontogram, but NOT users management
+        $dentistRole = \Modules\User\Models\Role::where('name', 'dentist')->first();
+        $dentist = User::factory()->create();
+        $dentist->assignRole($dentistRole);
+
+        $this->actingAs($dentist);
+        $this->get(route('patients.index'))->assertStatus(200);
+        $this->get(route('dental-charts.index'))->assertStatus(200);
+        $this->get(url('/dental'))->assertStatus(200);
+        $this->get(route('dental-conditions.index'))->assertStatus(200);
+        $this->get(route('users.index'))->assertStatus(403);
+
+        // 3. Super Admin: Can access all resources and administration
+        $admin = User::where('email', 'doctor@example.com')->first();
+        $this->actingAs($admin);
+        $this->get(route('patients.index'))->assertStatus(200);
+        $this->get(route('dental-charts.index'))->assertStatus(200);
+        $this->get(url('/dental'))->assertStatus(200);
+        $this->get(route('dental-conditions.index'))->assertStatus(200);
+        $this->get(route('users.index'))->assertStatus(200);
+        $this->get(route('roles.index'))->assertStatus(200);
     }
 }
+

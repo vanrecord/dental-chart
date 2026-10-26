@@ -9,11 +9,16 @@ use Illuminate\View\View;
 use Modules\DentalChart\Http\Requests\DentalChartRequest;
 use Modules\DentalChart\Models\DentalChart;
 use Modules\Patient\Models\Patient;
+use Modules\User\Traits\AuthorizesWithPermissions;
 
 class DentalChartController extends Controller
 {
+    use AuthorizesWithPermissions;
+
     public function index(Request $request): View
     {
+        $this->checkPermission('odontogram:dental_chart:view');
+
         $query = DentalChart::query()
             ->with(['patient'])
             ->withCount('teeth');
@@ -30,6 +35,8 @@ class DentalChartController extends Controller
 
     public function create(Request $request): View
     {
+        $this->checkPermission('odontogram:dental_chart:create');
+
         $selectedPatientId = $request->query('patient_id');
         $patients = Patient::orderBy('full_name')->get(['id', 'patient_number', 'full_name']);
 
@@ -38,6 +45,8 @@ class DentalChartController extends Controller
 
     public function store(DentalChartRequest $request): RedirectResponse
     {
+        $this->checkPermission('odontogram:dental_chart:create');
+
         $data = $request->validated();
         if ($request->user()) {
             $data['created_by'] = $request->user()->id;
@@ -51,11 +60,15 @@ class DentalChartController extends Controller
 
     public function show(DentalChart $dentalChart): RedirectResponse
     {
+        $this->checkPermission('odontogram:dental_chart:view');
+
         return redirect()->route('dental.show', $dentalChart);
     }
 
     public function edit(DentalChart $dentalChart): View
     {
+        $this->checkPermission('odontogram:dental_chart:edit');
+
         $patients = Patient::orderBy('full_name')->get(['id', 'patient_number', 'full_name']);
 
         return view('dentalchart::edit', compact('dentalChart', 'patients'));
@@ -63,6 +76,8 @@ class DentalChartController extends Controller
 
     public function update(DentalChartRequest $request, DentalChart $dentalChart): RedirectResponse
     {
+        $this->checkPermission('odontogram:dental_chart:update');
+
         $data = $request->validated();
         if ($request->user()) {
             $data['updated_by'] = $request->user()->id;
@@ -76,6 +91,8 @@ class DentalChartController extends Controller
 
     public function destroy(DentalChart $dentalChart): RedirectResponse
     {
+        $this->checkPermission('odontogram:dental_chart:delete');
+
         $patientId = $dentalChart->patient_id;
         $dentalChart->delete();
 

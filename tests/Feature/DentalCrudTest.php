@@ -15,6 +15,16 @@ class DentalCrudTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $adminRole = \Modules\User\Models\Role::firstOrCreate(['name' => 'admin', 'label' => 'Administrator']);
+        $admin = \App\Models\User::factory()->create();
+        $admin->assignRole($adminRole);
+        $this->actingAs($admin);
+    }
+
     public function test_database_seeder_runs_successfully(): void
     {
         $this->seed(DatabaseSeeder::class);

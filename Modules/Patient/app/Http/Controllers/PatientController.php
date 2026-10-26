@@ -8,11 +8,16 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Modules\Patient\Http\Requests\PatientRequest;
 use Modules\Patient\Models\Patient;
+use Modules\User\Traits\AuthorizesWithPermissions;
 
 class PatientController extends Controller
 {
+    use AuthorizesWithPermissions;
+
     public function index(Request $request): View
     {
+        $this->checkPermission('patient:patients:view');
+
         $query = Patient::query()->withCount('dentalCharts');
 
         if ($request->filled('search')) {
@@ -31,11 +36,15 @@ class PatientController extends Controller
 
     public function create(): View
     {
+        $this->checkPermission('patient:patients:create');
+
         return view('patient::create');
     }
 
     public function store(PatientRequest $request): RedirectResponse
     {
+        $this->checkPermission('patient:patients:create');
+
         $patient = Patient::create($request->validated());
 
         return redirect()->route('patients.show', $patient)
@@ -44,6 +53,8 @@ class PatientController extends Controller
 
     public function show(Patient $patient): View
     {
+        $this->checkPermission('patient:patients:view');
+
         $patient->load(['dentalCharts' => fn ($q) => $q->latest('chart_date')]);
 
         return view('patient::show', compact('patient'));
@@ -51,11 +62,15 @@ class PatientController extends Controller
 
     public function edit(Patient $patient): View
     {
+        $this->checkPermission('patient:patients:edit');
+
         return view('patient::edit', compact('patient'));
     }
 
     public function update(PatientRequest $request, Patient $patient): RedirectResponse
     {
+        $this->checkPermission('patient:patients:update');
+
         $patient->update($request->validated());
 
         return redirect()->route('patients.show', $patient)
@@ -64,6 +79,8 @@ class PatientController extends Controller
 
     public function destroy(Patient $patient): RedirectResponse
     {
+        $this->checkPermission('patient:patients:delete');
+
         $patient->delete();
 
         return redirect()->route('patients.index')

@@ -362,8 +362,11 @@ Every permission consists of three lowercase, colon-separated segments:
   - `GET /login` (`login`) &mdash; Guest only; authenticated users redirected to `/dashboard`.
   - `POST /login` &mdash; Validates credentials, supports Remember Me, regenerates session ID, and redirects to intended URL.
   - `POST /logout` (`logout`) &mdash; Logs out user, invalidates session, regenerates CSRF token, and redirects to `/login`.
-- **Protected Routes:**
-  - Unauthenticated access to protected management routes (`/users`, `/roles`) redirects directly to `/login`.
+- **Protected Routes & Role-Based Access:**
+  - All web routes (`/`, `/dashboard`, `/patients`, `/dental-charts`, `/dental`, `/dental-conditions`, `/users`, `/roles`) are strictly guarded with `auth` middleware.
+  - Any unauthenticated access to these routes automatically redirects to `/login` with intended destination tracking.
+  - In [`sidebar.blade.php`](Modules/Core/resources/views/layouts/sidebar.blade.php), menu items are strictly rendered according to user permissions (`@can('patient:patients:view')`, `@can('odontogram:dental_chart:view')`, `@can('conditions:dental_condition:view')`, `@can('users:users:view')`, `@can('users:roles:view')`).
+  - Backend controllers enforce actions using [`AuthorizesWithPermissions`](Modules/User/app/Traits/AuthorizesWithPermissions.php), denying unauthorized access with `403 Forbidden`.
 - **Header & Sidebar UI:**
   - Added Sign Out / Sign In buttons in sidebar footer and header user profile.
 

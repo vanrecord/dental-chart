@@ -3,4 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Patient\Http\Controllers\PatientController;
 
-Route::resource('patients', PatientController::class);
+Route::middleware('auth')->group(function () {
+    Route::resource('patients', PatientController::class);
+});
