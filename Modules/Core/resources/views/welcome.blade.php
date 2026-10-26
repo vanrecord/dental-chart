@@ -16,6 +16,8 @@
         <a href="{{ route('patients.index') }}" class="btn btn-outline" style="padding: 0.75rem 1.4rem; font-size: 1rem;">Manage Patients</a>
         <a href="{{ route('dental-charts.index') }}" class="btn btn-outline" style="padding: 0.75rem 1.4rem; font-size: 1rem;">View Charts</a>
         <a href="{{ route('dental-conditions.index') }}" class="btn btn-outline" style="padding: 0.75rem 1.4rem; font-size: 1rem;">Conditions</a>
+        <a href="{{ route('users.index') }}" class="btn btn-outline" style="padding: 0.75rem 1.4rem; font-size: 1rem;">Users</a>
+        <a href="{{ route('roles.index') }}" class="btn btn-outline" style="padding: 0.75rem 1.4rem; font-size: 1rem;">Roles</a>
     </div>
 </div>
 
@@ -45,6 +47,18 @@
             Configure diagnosis categories, custom marking colors, codes (e.g. Caries, Crown, Restoration).
         </p>
         <a href="{{ route('dental-conditions.index') }}" class="btn btn-outline btn-sm">Go to Conditions &rarr;</a>
+    </div>
+
+    <div class="card">
+        <div style="font-size: 1.75rem; margin-bottom: 0.5rem;">🔐</div>
+        <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem;">User &amp; RBAC Module</h2>
+        <p style="color: var(--text-muted); font-size: 0.875rem; line-height: 1.5; margin-bottom: 1rem;">
+            Manage users, security roles, and permissions using module:controller:function matrix controls.
+        </p>
+        <div style="display: flex; gap: 8px;">
+            <a href="{{ route('users.index') }}" class="btn btn-outline btn-sm">Users &rarr;</a>
+            <a href="{{ route('roles.index') }}" class="btn btn-outline btn-sm">Roles &rarr;</a>
+        </div>
     </div>
 
     <div class="card">

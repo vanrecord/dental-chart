@@ -159,3 +159,4 @@ function toggleRowCheckboxes(rowClass, state) {
 }
 </script>
 @endsection
+

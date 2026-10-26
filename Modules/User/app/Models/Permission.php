@@ -70,3 +70,4 @@ class Permission extends Model
         );
     }
 }
+

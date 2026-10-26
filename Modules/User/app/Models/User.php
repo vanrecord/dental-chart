@@ -8,3 +8,4 @@ class User extends BaseUser
 {
     // Inherits HasRolesAndPermissions and base attributes
 }
+
