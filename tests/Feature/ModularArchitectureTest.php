@@ -28,6 +28,7 @@ class ModularArchitectureTest extends TestCase
             'DentalCondition',
             'ToothFinding',
             'ActivityLog',
+            'User',
         ];
 
         foreach ($expectedModules as $moduleName) {
@@ -45,6 +46,8 @@ class ModularArchitectureTest extends TestCase
         $this->assertTrue(View::exists('patient::index'), 'patient::index view should exist');
         $this->assertTrue(View::exists('dentalchart::dental'), 'dentalchart::dental view should exist');
         $this->assertTrue(View::exists('dentalcondition::index'), 'dentalcondition::index view should exist');
+        $this->assertTrue(View::exists('user::users.index'), 'user::users.index view should exist');
+        $this->assertTrue(View::exists('user::roles.index'), 'user::roles.index view should exist');
     }
 
     public function test_collapsible_left_sidebar_renders_across_views(): void
@@ -59,6 +62,14 @@ class ModularArchitectureTest extends TestCase
         $response->assertSee('data-tooltip="Patients"', false);
         $response->assertSee('data-tooltip="Dental Charts"', false);
         $response->assertSee('data-tooltip="Interactive Odontogram"', false);
+
+        // When authenticated as admin, Users and Roles administration items are visible via @can
+        $admin = User::factory()->create();
+        $adminRole = \Modules\User\Models\Role::firstOrCreate(['name' => 'admin', 'label' => 'Administrator']);
+        $admin->assignRole($adminRole);
+        $authResponse = $this->actingAs($admin)->get('/');
+        $authResponse->assertSee('data-tooltip="Users"', false);
+        $authResponse->assertSee('data-tooltip="Roles & Permissions"', false);
 
         // 2. Patients View
         $response = $this->get(route('patients.index'));

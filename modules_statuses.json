@@ -4,5 +4,6 @@
     "DentalChart": true,
     "DentalCondition": true,
     "ToothFinding": true,
-    "ActivityLog": true
+    "ActivityLog": true,
+    "User": true
 }

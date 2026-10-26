@@ -293,6 +293,43 @@ The top navigation bar has been replaced by a responsive collapsible left sideba
    - Clicking "+ Create Patient" (from the Patients table view or the header "+ Patient" quick action) navigates directly to the dedicated create patient form screen at `/patients/create`.
    - Updated headings and submit button to "Create Patient" for consistent UX.
 
+---
+
+## 6. User & Role Management Module (`Modules/User`) & RBAC Architecture
+
+### Module Overview
+Created dedicated `User` module (`Modules/User`) managing system users, security roles, and permissions using the standard permission naming convention.
+
+### Permission Naming Convention: `module:controller:function`
+Every permission consists of three lowercase, colon-separated segments:
+- **Module:** Target application module (e.g. `users`, `patient`, `odontogram`, `conditions`).
+- **Controller:** Resource controller responsible for feature (e.g. `users`, `roles`, `permissions`, `patients`, `dental_chart`, `dental_condition`).
+- **Function:** Permitted action (e.g. `view`, `create`, `edit`, `update`, `delete`, `export`, `print`, `approve`, `cancel`).
+
+### Human-Readable Permission Display Labels
+- Raw strings like `users:users:view` are never displayed as labels in the UI.
+- Centralized mapping via [`Modules\User\Support\PermissionRegistry`](Modules/User/app/Support/PermissionRegistry.php):
+  - `view` &rarr; `View`
+  - `create` &rarr; `Create`
+  - `edit` &rarr; `Edit`
+  - `update` &rarr; `Update`
+  - `delete` &rarr; `Delete`
+  - `export` &rarr; `Export`
+  - `print` &rarr; `Print`
+  - Custom functions (`approve`, `cancel`, `refund`, etc.) &rarr; Capitalized friendly labels.
+
+### Role & Permission Matrix Screen
+- Grouped by **Module** (e.g. *User Management*, *Patient Management*, *Dental Chart / Odontogram*, *Dental Conditions*).
+- Rows correspond to **Controllers** (e.g. *Users*, *Roles*, *Patients*, *Dental Charts*).
+- Column headers display friendly action labels: `View`, `Create`, `Edit`, `Update`, `Delete`, `Export`, `Print`.
+- Checkboxes internally store the full identifier (e.g. `value="users:users:view"`).
+- Includes "Select All", "Toggle Module", and per-row batch toggles for smooth UX.
+
+### Backend Authorization & Gate Integration
+- Integrated directly with Laravel Gate via `Gate::before()` in [`UserServiceProvider`](Modules/User/app/Providers/UserServiceProvider.php).
+- Evaluates `@can('module:controller:function')` in Blade and enforces checks on the backend using the [`AuthorizesWithPermissions`](Modules/User/app/Traits/AuthorizesWithPermissions.php) trait (`403 Forbidden` on unauthorized actions).
+- Default system `admin` role has administrative bypass while maintaining strict RBAC enforcement for non-admin roles.
+
 ### Working with Modules
 
 #### List Modules

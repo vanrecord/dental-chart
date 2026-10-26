@@ -112,6 +112,33 @@
             </div>
         </div>
 
+        <div class="menu-section-label" style="margin-top: 1rem;">Administration</div>
+
+        <!-- Users -->
+        @can('users:users:view')
+            <a href="{{ route('users.index') }}" class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}" data-tooltip="Users">
+                <span class="nav-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </span>
+                <span class="nav-label">Users</span>
+            </a>
+        @endcan
+
+        <!-- Roles & Permissions -->
+        @can('users:roles:view')
+            <a href="{{ route('roles.index') }}" class="nav-item {{ request()->routeIs('roles.*') ? 'active' : '' }}" data-tooltip="Roles & Permissions">
+                <span class="nav-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                </span>
+                <span class="nav-label">Roles & Permissions</span>
+            </a>
+        @endcan
+
         <div class="menu-section-label" style="margin-top: 1rem;">System</div>
 
         <!-- Activity & API Health -->
