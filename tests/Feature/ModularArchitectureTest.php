@@ -65,8 +65,19 @@ class ModularArchitectureTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('app-sidebar', false);
         $response->assertSee('sidebarToggle', false);
+        $response->assertDontSee('Register Patient');
+        $response->assertSee('+ Create Patient');
 
-        // 3. Interactive Odontogram View
+        // 3. Create Patient Screen (focused create patient screen only)
+        $response = $this->get(route('patients.create'));
+        $response->assertStatus(200);
+        $response->assertSee('app-sidebar', false);
+        $response->assertSee('Create Patient');
+        $response->assertDontSee('Register Patient');
+        $response->assertSee('name="patient_number"', false);
+        $response->assertSee('name="full_name"', false);
+
+        // 4. Interactive Odontogram View
         $response = $this->get(url('/dental'));
         $response->assertStatus(200);
         $response->assertSee('app-sidebar', false);

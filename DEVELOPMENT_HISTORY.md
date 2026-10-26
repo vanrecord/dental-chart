@@ -285,6 +285,14 @@ The top navigation bar has been replaced by a responsive collapsible left sideba
    - Includes `role="navigation"`, `aria-label`, `aria-expanded` toggle synchronization, and keyboard listeners.
 
 
+### Navigation & Patient Creation UX Refinements
+1. **Simplified Sidebar Patients Menu**:
+   - Removed the nested "Register Patient" and "All Patients" submenu from the sidebar navigation.
+   - Configured "Patients" as a direct, top-level navigation link pointing to `route('patients.index')`.
+2. **Dedicated Create Patient Screen**:
+   - Clicking "+ Create Patient" (from the Patients table view or the header "+ Patient" quick action) navigates directly to the dedicated create patient form screen at `/patients/create`.
+   - Updated headings and submit button to "Create Patient" for consistent UX.
+
 ### Working with Modules
 
 #### List Modules

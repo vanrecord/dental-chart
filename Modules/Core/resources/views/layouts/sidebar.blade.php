@@ -25,33 +25,18 @@
             <span class="nav-label">Dashboard</span>
         </a>
 
-        <!-- Patients with Submenu -->
-        <div class="nav-group {{ request()->routeIs('patients.*') ? 'open active-group' : '' }}">
-            <button type="button" class="nav-item nav-parent {{ request()->routeIs('patients.*') ? 'active' : '' }}" data-tooltip="Patients" aria-expanded="{{ request()->routeIs('patients.*') ? 'true' : 'false' }}">
-                <span class="nav-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
-                </span>
-                <span class="nav-label">Patients</span>
-                <span class="nav-arrow">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                </span>
-            </button>
-            <div class="nav-submenu">
-                <a href="{{ route('patients.index') }}" class="subnav-item {{ request()->routeIs('patients.index') ? 'active' : '' }}">
-                    <span class="subnav-dot"></span> All Patients
-                </a>
-                <a href="{{ route('patients.create') }}" class="subnav-item {{ request()->routeIs('patients.create') ? 'active' : '' }}">
-                    <span class="subnav-dot"></span> Register Patient
-                </a>
-            </div>
-        </div>
+        <!-- Patients -->
+        <a href="{{ route('patients.index') }}" class="nav-item {{ request()->routeIs('patients.*') ? 'active' : '' }}" data-tooltip="Patients">
+            <span class="nav-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+            </span>
+            <span class="nav-label">Patients</span>
+        </a>
 
         <!-- Dental Charts with Submenu -->
         <div class="nav-group {{ (request()->routeIs('dental-charts.*') || request()->is('dental*')) ? 'open active-group' : '' }}">
@@ -150,3 +135,4 @@
         </div>
     </div>
 </aside>
+

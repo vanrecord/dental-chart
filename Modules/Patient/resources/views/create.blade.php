@@ -1,11 +1,11 @@
 @extends('core::layouts.app')
 
-@section('title', 'New Patient - Dental Chart')
+@section('title', 'Create Patient - Dental Chart')
 
 @section('content')
 <div class="page-header">
     <div>
-        <h1 class="page-title">Register New Patient</h1>
+        <h1 class="page-title">Create Patient</h1>
         <p style="color: var(--text-muted); font-size: 0.875rem;">Enter patient personal and contact details</p>
     </div>
     <a href="{{ route('patients.index') }}" class="btn btn-outline">Back to Patients</a>
@@ -58,7 +58,7 @@
 
         <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 1.5rem;">
             <a href="{{ route('patients.index') }}" class="btn btn-outline">Cancel</a>
-            <button type="submit" class="btn btn-primary">Save Patient</button>
+            <button type="submit" class="btn btn-primary">Create Patient</button>
         </div>
     </form>
 </div>

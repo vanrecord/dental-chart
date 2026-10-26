@@ -8,7 +8,7 @@
         <h1 class="page-title">Patients</h1>
         <p style="color: var(--text-muted); font-size: 0.875rem;">Manage registered patients and their dental charts</p>
     </div>
-    <a href="{{ route('patients.create') }}" class="btn btn-primary">+ New Patient</a>
+    <a href="{{ route('patients.create') }}" class="btn btn-primary">+ Create Patient</a>
 </div>
 
 <div class="card">

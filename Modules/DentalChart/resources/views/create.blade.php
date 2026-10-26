@@ -26,7 +26,7 @@
                 @endforeach
             </select>
             <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
-                Don't see the patient? <a href="{{ route('patients.create') }}" style="color: var(--primary);">Register a new patient first</a>.
+                Don't see the patient? <a href="{{ route('patients.create') }}" style="color: var(--primary);">Create a new patient first</a>.
             </div>
         </div>
 
