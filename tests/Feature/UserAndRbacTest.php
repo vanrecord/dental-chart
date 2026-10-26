@@ -299,7 +299,7 @@ class UserAndRbacTest extends TestCase
         // 2. Verify Super Admin user and role exist
         $superAdmin = User::where('email', 'superadmin@example.com')->first();
         $this->assertNotNull($superAdmin, 'Super Admin user should exist.');
-        $this->assertTrue($superAdmin->hasRole('super-admin'));
+        $this->assertTrue($superAdmin->is_super_addmin);
         $this->assertTrue($superAdmin->isSuperAdmin());
 
         // 3. Super Admin has unrestricted permissions via Gate

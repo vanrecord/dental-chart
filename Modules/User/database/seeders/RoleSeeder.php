@@ -15,6 +15,13 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
+        // 0. Super Admin Role (Protected System Role)
+        Role::findOrCreate(
+            'super-admin',
+            'Super Administrator',
+            'Full unrestricted system access: can see all menus and manage all application resources, settings, users, and roles.'
+        );
+
         // 1. Admin Role (Full Access)
         $admin = Role::findOrCreate(
             'admin',
