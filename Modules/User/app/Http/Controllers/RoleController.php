@@ -119,8 +119,8 @@ class RoleController extends Controller
             'description' => $validated['description'] ?? null,
         ];
 
-        // Only allow changing name if not default admin role
-        if ($role->name !== 'admin') {
+        // Only allow changing name if not default admin or super-admin role
+        if (! in_array($role->name, ['admin', 'super-admin'], true)) {
             $updateData['name'] = strtolower(trim($validated['name']));
         }
 
@@ -138,9 +138,9 @@ class RoleController extends Controller
     {
         $this->checkPermission('users:roles:delete');
 
-        if ($role->name === 'admin') {
+        if (in_array($role->name, ['admin', 'super-admin'], true)) {
             return redirect()->route('roles.index')
-                ->with('error', "The system 'admin' role cannot be deleted.");
+                ->with('error', "The system '{$role->name}' role cannot be deleted.");
         }
 
         $label = $role->label;

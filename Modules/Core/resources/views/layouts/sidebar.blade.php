@@ -154,10 +154,12 @@
 
     <div class="sidebar-footer">
         <div class="user-profile">
-            <div class="avatar-circle">Dr</div>
+            <div class="avatar-circle">
+                {{ auth()->check() ? strtoupper(substr(auth()->user()->name, 0, 2)) : 'Dr' }}
+            </div>
             <div class="user-meta">
-                <span class="user-name">Dr. Alex Smith</span>
-                <span class="user-role">Dental Surgeon</span>
+                <span class="user-name">{{ auth()->check() ? auth()->user()->name : 'Dr. Alex Smith' }}</span>
+                <span class="user-role">{{ (auth()->check() && auth()->user()->roles->first()) ? auth()->user()->roles->first()->label : 'Dental Surgeon' }}</span>
             </div>
         </div>
     </div>

@@ -33,9 +33,11 @@
         <div class="header-divider"></div>
 
         <div class="header-user">
-            <div class="avatar-small">Dr</div>
+            <div class="avatar-small">
+                {{ auth()->check() ? strtoupper(substr(auth()->user()->name, 0, 2)) : 'Dr' }}
+            </div>
             <div class="user-details-mini">
-                <span class="user-name-mini">Dr. Alex Smith</span>
+                <span class="user-name-mini">{{ auth()->check() ? auth()->user()->name : 'Dr. Alex Smith' }}</span>
                 <span class="user-status-dot" title="Online"></span>
             </div>
         </div>

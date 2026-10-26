@@ -31,6 +31,11 @@ class UserServiceProvider extends ServiceProvider
 
         // Register application-wide permission checking with module:controller:function format
         Gate::before(function ($user, string $ability) {
+            // Super Admin can access and manage all resources
+            if (method_exists($user, 'isSuperAdmin') && $user->isSuperAdmin()) {
+                return true;
+            }
+
             if (method_exists($user, 'hasPermission') && $user->hasPermission($ability)) {
                 return true;
             }
@@ -53,7 +58,9 @@ class UserServiceProvider extends ServiceProvider
      */
     protected function registerCommands(): void
     {
-        // $this->commands([]);
+        $this->commands([
+            \Modules\User\Console\SeedSuperAdminCommand::class,
+        ]);
     }
 
     /**

@@ -328,7 +328,25 @@ Every permission consists of three lowercase, colon-separated segments:
 ### Backend Authorization & Gate Integration
 - Integrated directly with Laravel Gate via `Gate::before()` in [`UserServiceProvider`](Modules/User/app/Providers/UserServiceProvider.php).
 - Evaluates `@can('module:controller:function')` in Blade and enforces checks on the backend using the [`AuthorizesWithPermissions`](Modules/User/app/Traits/AuthorizesWithPermissions.php) trait (`403 Forbidden` on unauthorized actions).
-- Default system `admin` role has administrative bypass while maintaining strict RBAC enforcement for non-admin roles.
+- Default system `admin` and `super-admin` roles have administrative bypass while maintaining strict RBAC enforcement for non-admin roles.
+
+### Super Administrator (`seedSuperAdmin`)
+- **Seeder:** [`Modules\User\Database\Seeders\SuperAdminSeeder`](Modules/User/database/seeders/SuperAdminSeeder.php) (aliased as [`Database\Seeders\seedSuperAdmin`](database/seeders/seedSuperAdmin.php)).
+- **Role:** `super-admin` ("Super Administrator").
+- **Account:** `superadmin@example.com` (password: `password`).
+- **Capabilities:**
+  - Has `isSuperAdmin() === true` and unrestricted permission bypass via `Gate::before`.
+  - Can see all navigation menus (Dashboard, Patients, Dental Charts, Odontogram, Conditions, Users, Roles & Permissions, API Health).
+  - Can manage all application resources, users, roles, and permissions.
+  - Role cannot be accidentally deleted or modified.
+- **Commands to Run:**
+  ```bash
+  # Option 1: Via artisan seeder alias
+  php artisan db:seed --class=seedSuperAdmin
+
+  # Option 2: Via custom artisan command
+  php artisan seed:super-admin
+  ```
 
 ### Working with Modules
 

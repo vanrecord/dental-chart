@@ -253,4 +253,52 @@ class UserAndRbacTest extends TestCase
         $response = $this->delete(route('roles.destroy', $someRole));
         $response->assertStatus(403);
     }
+
+    public function test_seed_super_admin_can_see_all_menus_and_manage_all(): void
+    {
+        // 1. Run seedSuperAdmin seeder
+        $this->seed(\Database\Seeders\seedSuperAdmin::class);
+
+        // 2. Verify Super Admin user and role exist
+        $superAdmin = User::where('email', 'superadmin@example.com')->first();
+        $this->assertNotNull($superAdmin, 'Super Admin user should exist.');
+        $this->assertTrue($superAdmin->hasRole('super-admin'));
+        $this->assertTrue($superAdmin->isSuperAdmin());
+
+        // 3. Super Admin has unrestricted permissions via Gate
+        $this->assertTrue($superAdmin->can('users:users:view'));
+        $this->assertTrue($superAdmin->can('users:users:create'));
+        $this->assertTrue($superAdmin->can('users:roles:delete'));
+        $this->assertTrue($superAdmin->can('patient:patients:delete'));
+        $this->assertTrue($superAdmin->can('odontogram:dental_chart:delete'));
+        $this->assertTrue($superAdmin->can('custom:nonexistent:permission')); // Universal super admin bypass
+
+        // 4. Super Admin can see all menus across views
+        $this->actingAs($superAdmin);
+
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertSee('data-tooltip="Dashboard"', false);
+        $response->assertSee('data-tooltip="Patients"', false);
+        $response->assertSee('data-tooltip="Dental Charts"', false);
+        $response->assertSee('data-tooltip="Interactive Odontogram"', false);
+        $response->assertSee('data-tooltip="Conditions & Legend"', false);
+        $response->assertSee('data-tooltip="Users"', false);
+        $response->assertSee('data-tooltip="Roles & Permissions"', false);
+        $response->assertSee('data-tooltip="API Health"', false);
+        $response->assertSee('Super Administrator');
+
+        // 5. Super Admin can manage all modules
+        $this->get(route('users.index'))->assertStatus(200)->assertSee('+ Create User');
+        $this->get(route('roles.index'))->assertStatus(200)->assertSee('+ Create Role');
+        $this->get(route('patients.index'))->assertStatus(200);
+        $this->get(route('dental-charts.index'))->assertStatus(200);
+        $this->get(route('dental-conditions.index'))->assertStatus(200);
+
+        // 6. Super Admin role cannot be deleted
+        $superRole = Role::where('name', 'super-admin')->first();
+        $response = $this->delete(route('roles.destroy', $superRole));
+        $response->assertRedirect(route('roles.index'));
+        $this->assertDatabaseHas('roles', ['id' => $superRole->id]);
+    }
 }
