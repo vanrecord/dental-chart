@@ -68,13 +68,14 @@
                 <div>
                     <strong style="font-size: 0.875rem; color: #0f172a; display: block;">Super Administrator (is_super_addmin)</strong>
                     <span style="color: var(--text-muted); font-size: 0.8125rem; display: block; line-height: 1.4; margin-top: 2px;">
-                        When enabled (<code style="background: #e2e8f0; padding: 1px 4px; border-radius: 4px; font-size: 0.75rem;">true</code>), this user can view and manage all menus, modules, and functions across the entire system.
+                        When enabled (<code style="background: #e2e8f0; padding: 1px 4px; border-radius: 4px; font-size: 0.75rem;">true</code>), this user can view and manage all menus, modules, and functions across the entire system. Role assignment is not required.
                     </span>
                 </div>
             </label>
         </div>
 
-        <div class="form-group">
+        <!-- Roles Section (Hidden when is_super_addmin is true) -->
+        <div id="rolesSection" class="form-group">
             <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Assign Roles</label>
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; margin-top: 0.5rem;">
                 @php
@@ -93,6 +94,38 @@
                 @endforeach
             </div>
         </div>
+
+        <div id="superAdminRoleNotice" style="display: none; background: #fefce8; border: 1px solid #fef08a; border-radius: 8px; padding: 12px 16px; margin-bottom: 1.25rem; color: #854d0e; font-size: 0.875rem;">
+            <div style="font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                <span>★ Role Assignment Not Required</span>
+            </div>
+            <p style="margin: 4px 0 0; font-size: 0.8125rem; color: #a16207; line-height: 1.4;">
+                As a Super Administrator (<strong>is_super_addmin: true</strong>), this user automatically has full unrestricted access to all menus, permissions, and functions. You do not need to assign any roles.
+            </p>
+        </div>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const superAdminCheckbox = document.getElementById('is_super_addmin');
+            const rolesSection = document.getElementById('rolesSection');
+            const superAdminNotice = document.getElementById('superAdminRoleNotice');
+
+            function syncSuperAdminRolesState() {
+                if (!superAdminCheckbox || !rolesSection) return;
+                const isSuper = superAdminCheckbox.checked;
+                rolesSection.style.display = isSuper ? 'none' : 'block';
+                if (superAdminNotice) superAdminNotice.style.display = isSuper ? 'block' : 'none';
+                if (isSuper) {
+                    rolesSection.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+                }
+            }
+
+            if (superAdminCheckbox) {
+                superAdminCheckbox.addEventListener('change', syncSuperAdminRolesState);
+                syncSuperAdminRolesState();
+            }
+        });
+        </script>
 
         <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 1.75rem;">
             <a href="{{ route('users.index') }}" class="btn btn-outline">Cancel</a>

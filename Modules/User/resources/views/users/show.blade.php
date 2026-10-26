@@ -48,7 +48,13 @@
                         <a href="{{ route('roles.show', $role) }}" style="font-size: 0.75rem; color: var(--primary); text-decoration: none;">View Role &rarr;</a>
                     </div>
                 @empty
-                    <span style="color: var(--text-muted); font-size: 0.875rem;">No roles assigned</span>
+                    @if($user->is_super_addmin)
+                        <div style="background: #fefce8; border: 1px solid #fef08a; padding: 8px 10px; border-radius: 6px; font-size: 0.8125rem; color: #854d0e; line-height: 1.4;">
+                            ★ <strong>No roles required.</strong> Unrestricted global permissions are active via <code>is_super_addmin: true</code>.
+                        </div>
+                    @else
+                        <span style="color: var(--text-muted); font-size: 0.875rem;">No roles assigned</span>
+                    @endif
                 @endforelse
             </div>
         </div>

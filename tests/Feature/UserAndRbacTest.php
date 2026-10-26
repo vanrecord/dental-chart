@@ -344,14 +344,16 @@ class UserAndRbacTest extends TestCase
         $adminUser = User::where('email', 'doctor@example.com')->first();
         $this->actingAs($adminUser);
 
-        // 1. Create user screen displays is_super_addmin boolean input
+        // 1. Create user screen displays is_super_addmin boolean input and conditional notice
         $response = $this->get(route('users.create'));
         $response->assertStatus(200);
         $response->assertSee('name="is_super_addmin"', false);
         $response->assertSee('Super Administrator (is_super_addmin)');
         $response->assertSee('type="checkbox"', false);
+        $response->assertSee('id="rolesSection"', false);
+        $response->assertSee('Role Assignment Not Required');
 
-        // 2. Create user with is_super_addmin set to true (1)
+        // 2. Create user with is_super_addmin set to true (1) with NO roles selected
         $postData = [
             'name' => 'Custom Super Admin User',
             'username' => 'custom_super',
@@ -359,7 +361,7 @@ class UserAndRbacTest extends TestCase
             'password' => 'secret123',
             'password_confirmation' => 'secret123',
             'is_super_addmin' => '1',
-            'roles' => [],
+            // No roles needed or selected
         ];
         $response = $this->post(route('users.store'), $postData);
         $response->assertRedirect(route('users.index'));
@@ -368,12 +370,14 @@ class UserAndRbacTest extends TestCase
         $this->assertNotNull($createdUser);
         $this->assertTrue($createdUser->is_super_addmin);
         $this->assertTrue($createdUser->isSuperAdmin());
+        $this->assertCount(0, $createdUser->roles, 'Super admin requires no assigned roles');
 
-        // 3. Edit user screen displays is_super_addmin checked for this user
+        // 3. Edit user screen displays is_super_addmin checked for this user and notice
         $response = $this->get(route('users.edit', $createdUser));
         $response->assertStatus(200);
         $response->assertSee('name="is_super_addmin"', false);
         $response->assertSee('checked', false);
+        $response->assertSee('Role Assignment Not Required');
 
         // 4. Update user to uncheck is_super_addmin (set to 0)
         $updateData = [

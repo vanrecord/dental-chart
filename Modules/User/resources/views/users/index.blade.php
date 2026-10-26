@@ -92,7 +92,13 @@
                                         {{ $role->label }}
                                     </span>
                                 @empty
-                                    <span style="color: var(--text-muted); font-size: 0.75rem;">No roles</span>
+                                    @if($user->is_super_addmin)
+                                        <span class="badge" style="background: #fefce8; color: #854d0e; font-size: 0.75rem; border: 1px solid #fef08a;">
+                                            All Access (No Role Needed)
+                                        </span>
+                                    @else
+                                        <span style="color: var(--text-muted); font-size: 0.75rem;">No roles</span>
+                                    @endif
                                 @endforelse
                             </div>
                         </td>
