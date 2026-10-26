@@ -33,13 +33,19 @@ class SuperAdminSeeder extends Seeder
 
         // 3. Create or update the Super Admin User
         $email = env('SUPER_ADMIN_EMAIL', 'superadmin@example.com');
+        $username = env('SUPER_ADMIN_USERNAME', 'superadmin');
         $superAdmin = User::firstOrCreate(
             ['email' => $email],
             [
                 'name' => env('SUPER_ADMIN_NAME', 'Super Administrator'),
+                'username' => $username,
                 'password' => Hash::make(env('SUPER_ADMIN_PASSWORD', 'password')),
             ]
         );
+
+        if (empty($superAdmin->username)) {
+            $superAdmin->update(['username' => $username]);
+        }
 
         // Ensure super-admin role is assigned
         if (! $superAdmin->hasRole('super-admin')) {

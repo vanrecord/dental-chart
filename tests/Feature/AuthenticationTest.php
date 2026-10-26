@@ -27,7 +27,7 @@ class AuthenticationTest extends TestCase
         $response->assertSee('WELCOME');
         $response->assertSee('YOUR PRACTICE. ONE SIMPLE PLACE.');
         $response->assertSee('Sign in');
-        $response->assertSee('name="email"', false);
+        $response->assertSee('name="username"', false);
         $response->assertSee('name="password"', false);
         $response->assertSee('name="remember"', false);
         $response->assertSee('togglePassword');
@@ -48,10 +48,24 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect(route('dashboard'));
     }
 
-    public function test_login_with_valid_credentials_authenticates_and_redirects(): void
+    public function test_login_with_valid_username_credentials_authenticates_and_redirects(): void
     {
         $response = $this->post(route('login'), [
-            'email' => 'doctor@example.com',
+            'username' => 'doctor',
+            'password' => 'password',
+            'remember' => '1',
+        ]);
+
+        $response->assertRedirect(route('dashboard'));
+        $this->assertAuthenticated();
+        $this->assertEquals('doctor', Auth::user()->username);
+        $this->assertEquals('doctor@example.com', Auth::user()->email);
+    }
+
+    public function test_login_with_valid_email_fallback_authenticates_and_redirects(): void
+    {
+        $response = $this->post(route('login'), [
+            'username' => 'doctor@example.com',
             'password' => 'password',
             'remember' => '1',
         ]);
@@ -64,24 +78,24 @@ class AuthenticationTest extends TestCase
     public function test_login_with_invalid_credentials_fails_with_errors(): void
     {
         $response = $this->from(route('login'))->post(route('login'), [
-            'email' => 'doctor@example.com',
+            'username' => 'doctor',
             'password' => 'wrong-password',
         ]);
 
         $response->assertRedirect(route('login'));
-        $response->assertSessionHasErrors('email');
+        $response->assertSessionHasErrors('username');
         $this->assertGuest();
     }
 
-    public function test_login_validation_requires_email_and_password(): void
+    public function test_login_validation_requires_username_and_password(): void
     {
         $response = $this->from(route('login'))->post(route('login'), [
-            'email' => '',
+            'username' => '',
             'password' => '',
         ]);
 
         $response->assertRedirect(route('login'));
-        $response->assertSessionHasErrors(['email', 'password']);
+        $response->assertSessionHasErrors(['username', 'password']);
         $this->assertGuest();
     }
 

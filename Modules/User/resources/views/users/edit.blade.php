@@ -34,9 +34,14 @@
             </div>
 
             <div class="form-group">
-                <label for="email">Email Address *</label>
-                <input type="email" id="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
+                <label for="username">Username *</label>
+                <input type="text" id="username" name="username" class="form-control" value="{{ old('username', $user->username) }}" required pattern="^[a-zA-Z0-9_-]+$" title="Only letters, numbers, dash and underscore allowed">
             </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
         </div>
 
         <div style="background: #f8fafc; padding: 12px 16px; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 1.25rem;">

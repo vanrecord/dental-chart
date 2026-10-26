@@ -88,6 +88,7 @@ class UserAndRbacTest extends TestCase
         $dentistRole = Role::where('name', 'dentist')->first();
         $postData = [
             'name' => 'Dr. Robert Brown',
+            'username' => 'dr_rbrown',
             'email' => 'robert.brown@example.com',
             'password' => 'secret123',
             'password_confirmation' => 'secret123',
@@ -99,33 +100,68 @@ class UserAndRbacTest extends TestCase
 
         $newUser = User::where('email', 'robert.brown@example.com')->first();
         $this->assertNotNull($newUser);
+        $this->assertEquals('dr_rbrown', $newUser->username);
         $this->assertTrue($newUser->hasRole('dentist'));
 
         // 4. Show user
         $response = $this->get(route('users.show', $newUser));
         $response->assertStatus(200);
         $response->assertSee('Dr. Robert Brown');
+        $response->assertSee('@dr_rbrown');
         $response->assertSee('Dentist');
 
         // 5. Edit user
         $response = $this->get(route('users.edit', $newUser));
         $response->assertStatus(200);
         $response->assertSee('Edit User: Dr. Robert Brown');
+        $response->assertSee('value="dr_rbrown"', false);
 
         // 6. Update user
         $updateData = [
             'name' => 'Dr. Robert C. Brown',
+            'username' => 'dr_rbrown_updated',
             'email' => 'robert.brown@example.com',
             'roles' => [$dentistRole->id],
         ];
         $response = $this->put(route('users.update', $newUser), $updateData);
         $response->assertRedirect(route('users.index'));
         $this->assertEquals('Dr. Robert C. Brown', $newUser->fresh()->name);
+        $this->assertEquals('dr_rbrown_updated', $newUser->fresh()->username);
 
         // 7. Delete user
         $response = $this->delete(route('users.destroy', $newUser));
         $response->assertRedirect(route('users.index'));
         $this->assertDatabaseMissing('users', ['id' => $newUser->id]);
+    }
+
+    public function test_user_creation_validates_username_uniqueness_and_format(): void
+    {
+        $adminUser = User::where('email', 'doctor@example.com')->first();
+        $this->actingAs($adminUser);
+
+        // Attempt duplicate username (doctor)
+        $response = $this->from(route('users.create'))->post(route('users.store'), [
+            'name' => 'Duplicate Doctor',
+            'username' => 'doctor',
+            'email' => 'unique_email@example.com',
+            'password' => 'secret123',
+            'password_confirmation' => 'secret123',
+        ]);
+
+        $response->assertRedirect(route('users.create'));
+        $response->assertSessionHasErrors('username');
+
+        // Attempt invalid username characters (spaces or special symbols)
+        $response = $this->from(route('users.create'))->post(route('users.store'), [
+            'name' => 'Invalid Username User',
+            'username' => 'invalid username!',
+            'email' => 'unique_email2@example.com',
+            'password' => 'secret123',
+            'password_confirmation' => 'secret123',
+        ]);
+
+        $response->assertRedirect(route('users.create'));
+        $response->assertSessionHasErrors('username');
     }
 
     public function test_roles_crud_and_permission_matrix(): void
@@ -242,6 +278,7 @@ class UserAndRbacTest extends TestCase
         // Direct POST to store user without 'users:users:create' must return 403 Forbidden
         $response = $this->post(route('users.store'), [
             'name' => 'Hacker User',
+            'username' => 'hacker',
             'email' => 'hacker@example.com',
             'password' => 'secret123',
             'password_confirmation' => 'secret123',

@@ -28,22 +28,29 @@ class AuthController extends Controller
     public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'email' => ['required', 'string', 'email'],
+            'username' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
 
         $remember = $request->boolean('remember');
+        $loginInput = $credentials['username'];
 
-        if (Auth::attempt($credentials, $remember)) {
+        // Determine if input is formatted as email or username
+        $isEmail = filter_var($loginInput, FILTER_VALIDATE_EMAIL);
+        $primaryField = $isEmail ? 'email' : 'username';
+
+        if (Auth::attempt([$primaryField => $loginInput, 'password' => $credentials['password']], $remember)
+            || ($primaryField !== 'email' && Auth::attempt(['email' => $loginInput, 'password' => $credentials['password']], $remember))
+            || ($primaryField === 'email' && Auth::attempt(['username' => $loginInput, 'password' => $credentials['password']], $remember))) {
             $request->session()->regenerate();
 
             return redirect()->intended(route('dashboard'));
         }
 
         return back()
-            ->withInput($request->only('email', 'remember'))
+            ->withInput($request->only('username', 'remember'))
             ->withErrors([
-                'email' => 'Invalid email address or password.',
+                'username' => 'Invalid username or password.',
             ]);
     }
 

@@ -21,9 +21,14 @@ class DatabaseSeeder extends Seeder
             ['email' => 'doctor@example.com'],
             [
                 'name' => 'Dr. Alex Smith',
+                'username' => 'doctor',
                 'password' => bcrypt('password'),
             ]
         );
+
+        if (empty($user->username)) {
+            $user->update(['username' => 'doctor']);
+        }
 
         $this->call(\Modules\User\Database\Seeders\UserDatabaseSeeder::class);
         $this->call(DentalConditionSeeder::class);

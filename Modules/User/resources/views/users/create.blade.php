@@ -33,9 +33,14 @@
             </div>
 
             <div class="form-group">
-                <label for="email">Email Address *</label>
-                <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}" required placeholder="e.g. user@example.com">
+                <label for="username">Username *</label>
+                <input type="text" id="username" name="username" class="form-control" value="{{ old('username') }}" required placeholder="e.g. jdoe" pattern="^[a-zA-Z0-9_-]+$" title="Only letters, numbers, dash and underscore allowed">
             </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}" required placeholder="e.g. user@example.com">
         </div>
 
         <div class="form-row">

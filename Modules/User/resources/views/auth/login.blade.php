@@ -75,18 +75,18 @@ a:hover{text-decoration:underline}
         </div>
       @endif
 
-      @if ($errors->has('email') && !old('email'))
+      @if ($errors->has('username') && !old('username'))
         <div class="alert alert-error" role="alert">
-          {{ $errors->first('email') }}
+          {{ $errors->first('username') }}
         </div>
       @endif
 
       <div class="field">
-        <label for="email">Email address</label>
-        <div class="input-wrap {{ $errors->has('email') ? 'has-error' : '' }}">
-          <input id="email" name="email" type="email" value="{{ old('email') }}" autocomplete="username" placeholder="you@clinic.com" required autofocus>
+        <label for="username">Username</label>
+        <div class="input-wrap {{ $errors->has('username') ? 'has-error' : '' }}">
+          <input id="username" name="username" type="text" value="{{ old('username') }}" autocomplete="username" placeholder="Enter your username" required autofocus>
         </div>
-        @error('email')
+        @error('username')
           <div class="error-msg" role="alert">{{ $message }}</div>
         @enderror
       </div>

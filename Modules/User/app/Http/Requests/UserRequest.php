@@ -24,6 +24,13 @@ class UserRequest extends FormRequest
 
         return [
             'name' => ['required', 'string', 'max:255'],
+            'username' => [
+                'required',
+                'string',
+                'max:50',
+                'alpha_dash',
+                Rule::unique('users', 'username')->ignore($userId),
+            ],
             'email' => [
                 'required',
                 'string',

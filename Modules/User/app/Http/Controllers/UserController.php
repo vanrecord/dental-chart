@@ -28,6 +28,7 @@ class UserController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('username', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
             });
         }
@@ -67,6 +68,7 @@ class UserController extends Controller
 
         $user = User::create([
             'name' => $validated['name'],
+            'username' => $validated['username'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
         ]);
@@ -116,6 +118,7 @@ class UserController extends Controller
 
         $updateData = [
             'name' => $validated['name'],
+            'username' => $validated['username'],
             'email' => $validated['email'],
         ];
 

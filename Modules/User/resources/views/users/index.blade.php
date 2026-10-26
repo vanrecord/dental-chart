@@ -27,7 +27,7 @@
 
 <div class="card">
     <form method="GET" action="{{ route('users.index') }}" style="display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap;">
-        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name or email..." class="form-control" style="max-width: 320px;">
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, username or email..." class="form-control" style="max-width: 320px;">
         
         <select name="role_id" class="form-control" style="max-width: 200px;">
             <option value="">All Roles</option>
@@ -67,6 +67,11 @@
                                     <a href="{{ route('users.show', $user) }}" style="font-weight: 600; color: #0f172a; text-decoration: none;">
                                         {{ $user->name }}
                                     </a>
+                                    @if($user->username)
+                                        <div style="font-size: 0.75rem; color: #0369a1; font-weight: 500;">
+                                            {{ '@' . $user->username }}
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </td>

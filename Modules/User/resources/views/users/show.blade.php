@@ -24,7 +24,10 @@
                 {{ strtoupper(substr($user->name, 0, 2)) }}
             </div>
             <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0; color: #0f172a;">{{ $user->name }}</h2>
-            <div style="color: var(--text-muted); font-size: 0.875rem;">{{ $user->email }}</div>
+            @if($user->username)
+                <div style="color: #0369a1; font-weight: 600; font-size: 0.875rem; margin-top: 2px;">{{ '@' . $user->username }}</div>
+            @endif
+            <div style="color: var(--text-muted); font-size: 0.8125rem; margin-top: 2px;">{{ $user->email }}</div>
         </div>
 
         <div style="border-top: 1px solid #e2e8f0; padding-top: 1rem; margin-top: 0.5rem;">
@@ -44,7 +47,8 @@
         </div>
 
         <div style="border-top: 1px solid #e2e8f0; padding-top: 1rem; margin-top: 1rem; font-size: 0.8125rem; color: var(--text-muted);">
-            <div><strong>Created:</strong> {{ $user->created_at ? $user->created_at->format('M d, Y') : '—' }}</div>
+            <div><strong>Username:</strong> {{ $user->username ? '@' . $user->username : '—' }}</div>
+            <div style="margin-top: 4px;"><strong>Created:</strong> {{ $user->created_at ? $user->created_at->format('M d, Y') : '—' }}</div>
             <div style="margin-top: 4px;"><strong>Updated:</strong> {{ $user->updated_at ? $user->updated_at->format('M d, Y') : '—' }}</div>
         </div>
     </div>
