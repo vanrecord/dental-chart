@@ -38,3 +38,4 @@ class SeedSuperAdminCommand extends Command
         return Command::SUCCESS;
     }
 }
+

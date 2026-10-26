@@ -190,6 +190,7 @@ erDiagram
 ### Web Routes
 | Module | Method | URI | Route Name | Action |
 |---|---|---|---|---|
+| **Core** | `GET` | `/dashboard` | `dashboard` | `CoreController@index` |
 | **Core** | `GET` | `/` | `home` | `CoreController@index` |
 | **Patient** | `GET` | `/patients` | `patients.index` | `PatientController@index` |
 | **Patient** | `GET` | `/patients/create` | `patients.create` | `PatientController@create` |

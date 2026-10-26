@@ -1,6 +1,6 @@
 <aside id="appSidebar" class="app-sidebar" role="navigation" aria-label="Main Navigation">
     <div class="sidebar-header">
-        <a href="{{ url('/') }}" class="sidebar-brand">
+        <a href="{{ url('/dashboard') }}" class="sidebar-brand">
             <span class="brand-icon">🦷</span>
             <div class="brand-text">
                 <span class="brand-title">OdontoCare</span>
@@ -13,7 +13,7 @@
         <div class="menu-section-label">Main Navigation</div>
 
         <!-- Dashboard -->
-        <a href="{{ url('/') }}" class="nav-item {{ request()->is('/') ? 'active' : '' }}" data-tooltip="Dashboard">
+        <a href="{{ url('/dashboard') }}" class="nav-item {{ (request()->is('dashboard*') || request()->is('/')) ? 'active' : '' }}" data-tooltip="Dashboard">
             <span class="nav-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>

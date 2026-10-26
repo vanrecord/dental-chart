@@ -53,12 +53,13 @@ class ModularArchitectureTest extends TestCase
     public function test_collapsible_left_sidebar_renders_across_views(): void
     {
         // 1. Dashboard View
-        $response = $this->get('/');
+        $response = $this->get('/dashboard');
         $response->assertStatus(200);
         $response->assertSee('id="appSidebar"', false);
         $response->assertSee('id="sidebarToggle"', false);
         $response->assertSee('id="sidebarBackdrop"', false);
         $response->assertSee('OdontoCare');
+        $response->assertSee('href="http://dental-chart.test/dashboard"', false);
         $response->assertSee('data-tooltip="Patients"', false);
         $response->assertSee('data-tooltip="Dental Charts"', false);
         $response->assertSee('data-tooltip="Interactive Odontogram"', false);

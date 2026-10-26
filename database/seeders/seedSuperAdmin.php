@@ -16,3 +16,4 @@ class seedSuperAdmin extends Seeder
         $this->call(SuperAdminSeeder::class);
     }
 }
+

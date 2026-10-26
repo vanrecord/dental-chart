@@ -53,3 +53,4 @@ class SuperAdminSeeder extends Seeder
         }
     }
 }
+
