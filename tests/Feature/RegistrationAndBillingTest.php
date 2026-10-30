@@ -196,6 +196,20 @@ class RegistrationAndBillingTest extends TestCase
     {
         $this->actingAs($this->adminUser);
 
+        // Searching with fewer than 2 characters returns empty results
+        $responseEmpty = $this->getJson(route('register.search_patients', ['q' => '']));
+        $responseEmpty->assertStatus(200);
+        $responseEmpty->assertExactJson([]);
+
+        $responseOneChar = $this->getJson(route('register.search_patients', ['q' => 'D']));
+        $responseOneChar->assertStatus(200);
+        $responseOneChar->assertExactJson([]);
+
+        // AJAX search patients with at least 2 characters
+        $responseTwoChar = $this->getJson(route('register.search_patients', ['q' => 'De']));
+        $responseTwoChar->assertStatus(200);
+        $responseTwoChar->assertJsonFragment(['patient_number' => 'P000125', 'full_name' => 'Demo Patient']);
+
         // AJAX search patients with exact case
         $response = $this->getJson(route('register.search_patients', ['q' => 'Demo']));
         $response->assertStatus(200);

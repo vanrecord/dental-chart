@@ -75,6 +75,22 @@
             </a>
         @endcan
 
+        <!-- Doctors -->
+        @can('hospital:doctors:view')
+            <a href="{{ route('hospital.doctors.index') }}" class="nav-item {{ request()->routeIs('hospital.doctors.*') ? 'active' : '' }}" data-tooltip="Doctors" {!! request()->routeIs('hospital.doctors.*') ? 'aria-current="page"' : '' !!}>
+                <span class="nav-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4.5 3v5a6.5 6.5 0 0 0 13 0V3"></path>
+                        <path d="M6 3h-3"></path>
+                        <path d="M21 3h-3"></path>
+                        <path d="M11 14.5v3.5a4 4 0 0 0 8 0v-2"></path>
+                        <circle cx="19" cy="14" r="2"></circle>
+                    </svg>
+                </span>
+                <span class="nav-label">Doctors</span>
+            </a>
+        @endcan
+
         <!-- Billing Section Divider -->
         @if(auth()->user()?->can('invoice:invoices:view') || auth()->user()?->can('payment:payments:view'))
             <div class="menu-section-divider"></div>
@@ -110,7 +126,7 @@
         @endif
 
         <!-- Dental & Clinical Section Divider -->
-        @if(auth()->user()?->can('odontogram:dental_chart:view') || auth()->user()?->can('conditions:dental_condition:view') || auth()->user()?->can('hospital:service-categories:view') || auth()->user()?->can('hospital:product-categories:view') || auth()->user()?->can('hospital:services:view') || auth()->user()?->can('hospital:products:view'))
+        @if(auth()->user()?->can('odontogram:dental_chart:view') || auth()->user()?->can('conditions:dental_condition:view') || auth()->user()?->can('hospital:service-categories:view') || auth()->user()?->can('hospital:product-categories:view') || auth()->user()?->can('hospital:services:view') || auth()->user()?->can('hospital:products:view') || auth()->user()?->can('hospital:doctors:view'))
             <div class="menu-section-divider"></div>
             <div class="menu-section-label">Clinical & Services</div>
 
@@ -184,7 +200,7 @@
             @endcan
 
             <!-- Hospital with Submenu -->
-            @if(auth()->user()?->can('hospital:service-categories:view') || auth()->user()?->can('hospital:product-categories:view') || auth()->user()?->can('hospital:services:view') || auth()->user()?->can('hospital:products:view'))
+            @if(auth()->user()?->can('hospital:service-categories:view') || auth()->user()?->can('hospital:product-categories:view') || auth()->user()?->can('hospital:services:view') || auth()->user()?->can('hospital:products:view') || auth()->user()?->can('hospital:doctors:view'))
                 <div class="nav-group {{ request()->routeIs('hospital.*') ? 'open active-group' : '' }}">
                     <button type="button" class="nav-item nav-parent {{ request()->routeIs('hospital.*') ? 'active' : '' }}" data-tooltip="Hospital" aria-expanded="{{ request()->routeIs('hospital.*') ? 'true' : 'false' }}" aria-haspopup="true">
                         <span class="nav-icon">
@@ -226,6 +242,12 @@
                             <a href="{{ route('hospital.products.index') }}" class="subnav-item {{ request()->routeIs('hospital.products.*') ? 'active' : '' }}" {!! request()->routeIs('hospital.products.*') ? 'aria-current="page"' : '' !!}>
                                 <span class="subnav-dot"></span>
                                 <span class="subnav-text">Products</span>
+                            </a>
+                        @endcan
+                        @can('hospital:doctors:view')
+                            <a href="{{ route('hospital.doctors.index') }}" class="subnav-item {{ request()->routeIs('hospital.doctors.*') ? 'active' : '' }}" {!! request()->routeIs('hospital.doctors.*') ? 'aria-current="page"' : '' !!}>
+                                <span class="subnav-dot"></span>
+                                <span class="subnav-text">Doctors</span>
                             </a>
                         @endcan
                     </div>
