@@ -66,7 +66,7 @@ class RegisterController extends Controller
         $this->checkPermission('register:register:view');
 
         $q = trim((string) $request->input('q', ''));
-        if (strlen($q) < 1) {
+        if (mb_strlen($q, 'UTF-8') < 2) {
             return response()->json([]);
         }
 

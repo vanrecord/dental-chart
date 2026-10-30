@@ -68,8 +68,8 @@
                 </div>
 
                 <div style="position: relative;">
-                    <label for="patientSearchInput" style="font-size: 0.8125rem; font-weight: 600; color: #334155; margin-bottom: 4px; display: block;">Search Existing Patient</label>
-                    <input type="text" id="patientSearchInput" class="form-control" placeholder="Search by patient ID (e.g. P000125), full name, or phone number..." autocomplete="off">
+                    <label for="patientSearchInput" style="font-size: 0.8125rem; font-weight: 600; color: #334155; margin-bottom: 4px; display: block;">Search Existing Patient <span style="font-weight: 400; color: #64748b; font-size: 0.75rem;">(enter at least 2 characters)</span></label>
+                    <input type="text" id="patientSearchInput" class="form-control" placeholder="Search by patient ID (e.g. P000125), full name, or phone number (min. 2 characters)..." autocomplete="off">
                     
                     <div id="patientSearchResults" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 50; max-height: 260px; overflow-y: auto; margin-top: 4px;">
                         <!-- AJAX populated results -->
@@ -344,7 +344,7 @@ if (searchInput) {
     searchInput.addEventListener('input', function() {
         clearTimeout(searchTimeout);
         const query = this.value.trim();
-        if (query.length === 0) {
+        if (query.length < 2) {
             searchResults.style.display = 'none';
             return;
         }

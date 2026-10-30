@@ -52,6 +52,30 @@ class RoleSeeder extends Seeder
         ])->get();
         $dentist->syncPermissions($dentistPermissions);
 
+        // Doctor Role
+        $doctor = Role::findOrCreate(
+            'doctor',
+            'Doctor',
+            'Doctor & clinical practitioner access: patient records, dental charts, odontogram findings, and clinical services.'
+        );
+        $doctorPermissions = Permission::whereIn('name', [
+            'patient:patients:view',
+            'patient:patients:create',
+            'patient:patients:edit',
+            'patient:patients:update',
+            'patient:patients:export',
+            'odontogram:dental_chart:view',
+            'odontogram:dental_chart:create',
+            'odontogram:dental_chart:edit',
+            'odontogram:dental_chart:update',
+            'odontogram:dental_chart:export',
+            'odontogram:dental_chart:print',
+            'conditions:dental_condition:view',
+            'hospital:services:view',
+            'hospital:products:view',
+        ])->get();
+        $doctor->syncPermissions($doctorPermissions);
+
         // 3. Dental Assistant Role
         $assistant = Role::findOrCreate(
             'assistant',

@@ -53,6 +53,7 @@ class PermissionRegistry
         'product-categories' => 'Product Categories',
         'services' => 'Services',
         'products' => 'Products',
+        'doctors' => 'Doctors',
         'dental_chart' => 'Dental Charts',
         'dental_condition' => 'Dental Conditions',
         'general' => 'General Settings',
@@ -195,6 +196,13 @@ class PermissionRegistry
             'hospital:products:edit',
             'hospital:products:update',
             'hospital:products:delete',
+
+            // Hospital Module - Doctors
+            'hospital:doctors:view',
+            'hospital:doctors:create',
+            'hospital:doctors:edit',
+            'hospital:doctors:update',
+            'hospital:doctors:delete',
 
             // DentalChart Module - Dental Charts
             'odontogram:dental_chart:view',

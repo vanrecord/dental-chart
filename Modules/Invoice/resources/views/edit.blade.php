@@ -307,6 +307,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         tableBody.appendChild(tr);
 
+        // Initialize Select2 on dynamically added row
+        if (window.initSelect2) {
+            window.initSelect2(tr);
+        }
+
         // Attach change listeners
         const sel = tr.querySelector('.item-select');
         const priceInput = tr.querySelector('.item-price');
