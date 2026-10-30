@@ -307,6 +307,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         tableBody.appendChild(tr);
 
+        // Initialize Datepicker on dynamically added row
+        if (window.initDatepickers) {
+            window.initDatepickers(tr);
+        }
+
         // Attach change listeners
         const sel = tr.querySelector('.item-select');
         const priceInput = tr.querySelector('.item-price');

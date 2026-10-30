@@ -1165,7 +1165,120 @@
             .app-content { padding: 0 !important; }
             .container-fluid { max-width: none !important; width: 100% !important; margin: 0 !important; }
         }
+
+        /* ======================================================== */
+        /* FLATPICKR DATEPICKER MODERN THEME                        */
+        /* ======================================================== */
+        input[type="date"],
+        input.datepicker,
+        input.flatpickr-input {
+            background-color: #ffffff;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px 16px;
+            padding-right: 32px;
+            cursor: pointer;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input.datepicker::-webkit-calendar-picker-indicator {
+            display: none !important;
+            -webkit-appearance: none;
+        }
+        .flatpickr-calendar {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            font-family: inherit;
+            font-size: 0.875rem;
+            width: 308px;
+            padding: 4px;
+            z-index: 999999 !important;
+        }
+        .flatpickr-calendar.arrowTop:before,
+        .flatpickr-calendar.arrowTop:after,
+        .flatpickr-calendar.arrowBottom:before,
+        .flatpickr-calendar.arrowBottom:after {
+            border-bottom-color: var(--border);
+        }
+        .flatpickr-months {
+            background: #f8fafc;
+            border-radius: 8px 8px 0 0;
+            padding: 4px 0;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+        }
+        .flatpickr-months .flatpickr-month {
+            color: var(--text-main);
+            font-weight: 700;
+            fill: var(--text-main);
+            height: 34px;
+        }
+        .flatpickr-current-month {
+            font-size: 0.95rem;
+            padding-top: 4px;
+            font-weight: 700;
+        }
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .flatpickr-months .flatpickr-prev-month,
+        .flatpickr-months .flatpickr-next-month {
+            padding: 8px 10px;
+            color: var(--text-muted);
+            fill: var(--text-muted);
+            border-radius: 6px;
+        }
+        .flatpickr-months .flatpickr-prev-month:hover,
+        .flatpickr-months .flatpickr-next-month:hover {
+            color: var(--primary);
+            fill: var(--primary);
+            background: #eff6ff;
+        }
+        span.flatpickr-weekday {
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        .flatpickr-day {
+            border-radius: 6px;
+            font-size: 0.875rem;
+            color: var(--text-main);
+            height: 38px;
+            line-height: 38px;
+            margin: 1px 0;
+        }
+        .flatpickr-day:hover,
+        .flatpickr-day:focus {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            color: #1e40af;
+        }
+        .flatpickr-day.today {
+            border-color: var(--primary);
+            font-weight: 700;
+        }
+        .flatpickr-day.today:hover {
+            background: #eff6ff;
+            color: #1e40af;
+        }
+        .flatpickr-day.selected,
+        .flatpickr-day.selected:hover,
+        .flatpickr-day.selected:focus {
+            background: var(--primary) !important;
+            border-color: var(--primary) !important;
+            color: #ffffff !important;
+            font-weight: 700;
+        }
+        .flatpickr-day.flatpickr-disabled,
+        .flatpickr-day.flatpickr-disabled:hover {
+            color: #cbd5e1;
+        }
     </style>
+    <!-- Flatpickr Datepicker CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     @yield('styles')
 </head>
 <body class="app-body">
@@ -1465,6 +1578,59 @@
             }
         }
     });
+    </script>
+    <!-- Flatpickr Datepicker JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js"></script>
+    <script>
+    (function() {
+        function initDatepickers(context) {
+            if (typeof flatpickr === 'undefined') return;
+
+            const root = context || document;
+            let elements = [];
+            if (root instanceof Element && (root.matches('input[type="date"]') || root.matches('.datepicker'))) {
+                elements = [root];
+            } else {
+                elements = Array.from(root.querySelectorAll('input[type="date"], input.datepicker'));
+            }
+
+            elements.forEach(function(el) {
+                if (el._flatpickr) return;
+
+                const currentVal = el.value;
+
+                // Change type="date" to type="text" with class="datepicker" to prevent browser native picker clash
+                if (el.type === 'date') {
+                    try {
+                        el.type = 'text';
+                    } catch(e) {}
+                    el.classList.add('datepicker');
+                }
+
+                flatpickr(el, {
+                    dateFormat: 'Y-m-d',
+                    defaultDate: currentVal || undefined,
+                    allowInput: true,
+                    disableMobile: true,
+                    monthSelectorType: 'static',
+                    onChange: function(selectedDates, dateStr, instance) {
+                        instance.element.dispatchEvent(new Event('change', { bubbles: true }));
+                        instance.element.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                });
+            });
+        }
+
+        window.initDatepickers = initDatepickers;
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                initDatepickers();
+            });
+        } else {
+            initDatepickers();
+        }
+    })();
     </script>
     @yield('scripts')
 </body>
