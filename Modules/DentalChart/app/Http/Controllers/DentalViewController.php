@@ -29,15 +29,17 @@ class DentalViewController extends Controller
         $patients = Patient::with(['dentalCharts' => fn ($q) => $q->latest('chart_date')])
             ->orderBy('full_name')
             ->get();
+        $invoiceId = $request->query('invoice_id');
 
         return view('dentalchart::dental', [
             'activeChart' => $activeChart,
             'conditions' => $conditions,
             'patients' => $patients,
+            'invoiceId' => $invoiceId,
         ]);
     }
 
-    public function show(DentalChart $dentalChart): View
+    public function show(DentalChart $dentalChart, Request $request): View
     {
         $this->checkPermission('odontogram:dental_chart:view');
 
@@ -46,11 +48,13 @@ class DentalViewController extends Controller
         $patients = Patient::with(['dentalCharts' => fn ($q) => $q->latest('chart_date')])
             ->orderBy('full_name')
             ->get();
+        $invoiceId = $request->query('invoice_id', request('invoice_id'));
 
         return view('dentalchart::dental', [
             'activeChart' => $dentalChart,
             'conditions' => $conditions,
             'patients' => $patients,
+            'invoiceId' => $invoiceId,
         ]);
     }
 }

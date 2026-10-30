@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(\Modules\User\Database\Seeders\UserDatabaseSeeder::class);
         $this->call(DentalConditionSeeder::class);
+        $this->call(\Modules\Register\Database\Seeders\RegisterDatabaseSeeder::class);
 
         // Seed a sample patient
         $patient = Patient::firstOrCreate(

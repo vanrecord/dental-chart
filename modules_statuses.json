@@ -5,5 +5,10 @@
     "DentalCondition": true,
     "ToothFinding": true,
     "ActivityLog": true,
-    "User": true
+    "User": true,
+    "Register": true,
+    "Invoice": true,
+    "Payment": true,
+    "Hospital": true,
+    "Setting": true
 }

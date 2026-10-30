@@ -38,9 +38,10 @@ class DentalChartController extends Controller
         $this->checkPermission('odontogram:dental_chart:create');
 
         $selectedPatientId = $request->query('patient_id');
+        $invoiceId = $request->query('invoice_id');
         $patients = Patient::orderBy('full_name')->get(['id', 'patient_number', 'full_name']);
 
-        return view('dentalchart::create', compact('patients', 'selectedPatientId'));
+        return view('dentalchart::create', compact('patients', 'selectedPatientId', 'invoiceId'));
     }
 
     public function store(DentalChartRequest $request): RedirectResponse
@@ -48,13 +49,21 @@ class DentalChartController extends Controller
         $this->checkPermission('odontogram:dental_chart:create');
 
         $data = $request->validated();
+        $invoiceId = $request->input('invoice_id');
+        unset($data['invoice_id']);
+
         if ($request->user()) {
             $data['created_by'] = $request->user()->id;
         }
 
         $chart = DentalChart::create($data);
 
-        return redirect()->route('dental.show', $chart)
+        $params = ['dentalChart' => $chart];
+        if ($invoiceId) {
+            $params['invoice_id'] = $invoiceId;
+        }
+
+        return redirect()->route('dental.show', $params)
             ->with('success', 'Dental chart created. You can now record tooth findings.');
     }
 
@@ -65,13 +74,14 @@ class DentalChartController extends Controller
         return redirect()->route('dental.show', $dentalChart);
     }
 
-    public function edit(DentalChart $dentalChart): View
+    public function edit(DentalChart $dentalChart, Request $request): View
     {
         $this->checkPermission('odontogram:dental_chart:edit');
 
         $patients = Patient::orderBy('full_name')->get(['id', 'patient_number', 'full_name']);
+        $invoiceId = $request->query('invoice_id');
 
-        return view('dentalchart::edit', compact('dentalChart', 'patients'));
+        return view('dentalchart::edit', compact('dentalChart', 'patients', 'invoiceId'));
     }
 
     public function update(DentalChartRequest $request, DentalChart $dentalChart): RedirectResponse

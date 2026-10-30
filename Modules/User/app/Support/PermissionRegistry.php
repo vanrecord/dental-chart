@@ -27,10 +27,15 @@ class PermissionRegistry
      */
     protected static array $moduleLabels = [
         'users' => 'User Management',
+        'register' => 'Registration & Visits',
         'patient' => 'Patient Management',
+        'invoice' => 'Invoice & Billing',
+        'payment' => 'Payment Management',
+        'hospital' => 'Hospital Management',
         'odontogram' => 'Dental Chart / Odontogram',
         'conditions' => 'Dental Conditions',
         'activity_log' => 'Activity & Audit Log',
+        'settings' => 'System Settings',
     ];
 
     /**
@@ -40,9 +45,17 @@ class PermissionRegistry
         'users' => 'Users',
         'roles' => 'Roles',
         'permissions' => 'Permissions',
+        'register' => 'Registration',
         'patients' => 'Patients',
+        'invoices' => 'Invoices',
+        'payments' => 'Payments',
+        'service-categories' => 'Service Categories',
+        'product-categories' => 'Product Categories',
+        'services' => 'Services',
+        'products' => 'Products',
         'dental_chart' => 'Dental Charts',
         'dental_condition' => 'Dental Conditions',
+        'general' => 'General Settings',
     ];
 
     /**
@@ -136,6 +149,53 @@ class PermissionRegistry
             'patient:patients:delete',
             'patient:patients:export',
 
+            // Register Module - Visits & Registration
+            'register:register:view',
+            'register:register:create',
+            'register:register:update',
+
+            // Invoice Module - Invoices
+            'invoice:invoices:view',
+            'invoice:invoices:create',
+            'invoice:invoices:edit',
+            'invoice:invoices:update',
+            'invoice:invoices:delete',
+
+            // Payment Module - Payments
+            'payment:payments:view',
+            'payment:payments:create',
+            'payment:payments:edit',
+            'payment:payments:update',
+            'payment:payments:delete',
+
+            // Hospital Module - Service Categories
+            'hospital:service-categories:view',
+            'hospital:service-categories:create',
+            'hospital:service-categories:edit',
+            'hospital:service-categories:update',
+            'hospital:service-categories:delete',
+
+            // Hospital Module - Product Categories
+            'hospital:product-categories:view',
+            'hospital:product-categories:create',
+            'hospital:product-categories:edit',
+            'hospital:product-categories:update',
+            'hospital:product-categories:delete',
+
+            // Hospital Module - Services
+            'hospital:services:view',
+            'hospital:services:create',
+            'hospital:services:edit',
+            'hospital:services:update',
+            'hospital:services:delete',
+
+            // Hospital Module - Products
+            'hospital:products:view',
+            'hospital:products:create',
+            'hospital:products:edit',
+            'hospital:products:update',
+            'hospital:products:delete',
+
             // DentalChart Module - Dental Charts
             'odontogram:dental_chart:view',
             'odontogram:dental_chart:create',
@@ -151,6 +211,11 @@ class PermissionRegistry
             'conditions:dental_condition:edit',
             'conditions:dental_condition:update',
             'conditions:dental_condition:delete',
+
+            // Settings Module - General Settings
+            'settings:general:view',
+            'settings:general:edit',
+            'settings:general:update',
         ];
     }
 }

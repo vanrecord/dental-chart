@@ -30,5 +30,35 @@ class Patient extends Model
     {
         return $this->hasMany(DentalChart::class);
     }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(\Modules\Invoice\Models\Invoice::class);
+    }
+
+    public function receptions(): HasMany
+    {
+        return $this->hasMany(\Modules\Register\Models\Reception::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(\Modules\Payment\Models\Payment::class);
+    }
+
+    public function getTotalInvoicedAttribute(): float
+    {
+        return (float) $this->invoices()->sum('total_amount');
+    }
+
+    public function getTotalPaidAttribute(): float
+    {
+        return (float) $this->payments()->where('status', 'completed')->sum('amount');
+    }
+
+    public function getOutstandingBalanceAttribute(): float
+    {
+        return (float) $this->invoices()->whereNotIn('status', ['cancelled', 'refunded'])->sum('balance_amount');
+    }
 }
 

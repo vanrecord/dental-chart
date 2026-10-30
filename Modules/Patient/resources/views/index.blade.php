@@ -24,11 +24,13 @@
         <table>
             <thead>
                 <tr>
-                    <th>Patient #</th>
-                    <th>Full Name</th>
-                    <th>Sex / DOB</th>
+                    <th>Patient ID</th>
+                    <th>Patient Name</th>
+                    <th>Gender</th>
+                    <th>Date of Birth</th>
                     <th>Phone</th>
-                    <th>Charts</th>
+                    <th>Registered</th>
+                    <th>Invoices</th>
                     <th style="text-align: right;">Actions</th>
                 </tr>
             </thead>
@@ -41,28 +43,37 @@
                                 {{ $patient->full_name }}
                             </a>
                         </td>
-                        <td>
-                            {{ ucfirst($patient->sex ?? '—') }}
-                            @if($patient->date_of_birth)
-                                <span style="color: var(--text-muted); font-size: 0.75rem;">({{ $patient->date_of_birth->format('Y-m-d') }})</span>
-                            @endif
-                        </td>
+                        <td>{{ ucfirst($patient->sex ?? '—') }}</td>
+                        <td>{{ $patient->date_of_birth ? $patient->date_of_birth->format('Y-m-d') : '—' }}</td>
                         <td>{{ $patient->phone ?? '—' }}</td>
+                        <td style="color: var(--text-muted); font-size: 0.8125rem;">
+                            {{ $patient->created_at ? $patient->created_at->format('Y-m-d') : '—' }}
+                        </td>
                         <td>
-                            <span class="badge">{{ $patient->dental_charts_count }} charts</span>
+                            <span class="badge" style="background: #f1f5f9; color: #334155;">{{ $patient->invoices_count }} inv</span>
                         </td>
                         <td style="text-align: right;">
                             <div style="display: inline-flex; gap: 6px;">
-                                <a href="{{ route('patients.show', $patient) }}" class="btn btn-outline btn-sm">View</a>
-                                <a href="{{ route('dental-charts.create', ['patient_id' => $patient->id]) }}" class="btn btn-primary btn-sm">+ Chart</a>
-                                <a href="{{ route('patients.edit', $patient) }}" class="btn btn-outline btn-sm">Edit</a>
+                                @can('patient:patients:view')
+                                    <a href="{{ route('patients.show', $patient) }}" class="btn btn-outline btn-sm">View</a>
+                                @endcan
+                                @can('patient:patients:edit')
+                                    <a href="{{ route('patients.edit', $patient) }}" class="btn btn-outline btn-sm">Edit</a>
+                                @endcan
+                                @can('patient:patients:delete')
+                                    <form method="POST" action="{{ route('patients.destroy', $patient) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete patient \'{{ $patient->full_name }}\'?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline btn-sm" style="color: #dc2626; border-color: #fca5a5;">Delete</button>
+                                    </form>
+                                @endcan
                             </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">
-                            No patients found. Click "+ New Patient" to register one.
+                        <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                            No patients found. Click "+ Create Patient" to register one.
                         </td>
                     </tr>
                 @endforelse

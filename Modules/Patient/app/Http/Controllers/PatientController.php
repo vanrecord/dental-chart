@@ -18,14 +18,14 @@ class PatientController extends Controller
     {
         $this->checkPermission('patient:patients:view');
 
-        $query = Patient::query()->withCount('dentalCharts');
+        $query = Patient::query()->withCount(['dentalCharts', 'invoices', 'receptions']);
 
         if ($request->filled('search')) {
-            $search = $request->query('search');
+            $search = mb_strtolower($request->query('search'), 'UTF-8');
             $query->where(function ($q) use ($search) {
-                $q->where('full_name', 'like', "%{$search}%")
-                  ->orWhere('patient_number', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%");
+                $q->whereRaw('LOWER(full_name) LIKE ?', ["%{$search}%"])
+                  ->orWhereRaw('LOWER(patient_number) LIKE ?', ["%{$search}%"])
+                  ->orWhereRaw('LOWER(phone) LIKE ?', ["%{$search}%"]);
             });
         }
 
@@ -55,7 +55,12 @@ class PatientController extends Controller
     {
         $this->checkPermission('patient:patients:view');
 
-        $patient->load(['dentalCharts' => fn ($q) => $q->latest('chart_date')]);
+        $patient->load([
+            'dentalCharts' => fn ($q) => $q->latest('chart_date'),
+            'invoices' => fn ($q) => $q->withCount('receptions')->latest('invoice_date'),
+            'receptions' => fn ($q) => $q->with('invoice')->latest('reception_date'),
+            'payments' => fn ($q) => $q->with('invoice')->latest('payment_date'),
+        ]);
 
         return view('patient::show', compact('patient'));
     }
@@ -80,6 +85,11 @@ class PatientController extends Controller
     public function destroy(Patient $patient): RedirectResponse
     {
         $this->checkPermission('patient:patients:delete');
+
+        if ($patient->invoices()->where('paid_amount', '>', 0)->exists()) {
+            return redirect()->route('patients.index')
+                ->with('error', "Cannot delete patient '{$patient->full_name}' because financial invoice records exist.");
+        }
 
         $patient->delete();
 

@@ -318,7 +318,7 @@ class UserAndRbacTest extends TestCase
         $response->assertSee('data-tooltip="Dashboard"', false);
         $response->assertSee('data-tooltip="Patients"', false);
         $response->assertSee('data-tooltip="Dental Charts"', false);
-        $response->assertSee('data-tooltip="Interactive Odontogram"', false);
+        $response->assertDontSee('data-tooltip="Interactive Odontogram"', false);
         $response->assertSee('data-tooltip="Conditions & Legend"', false);
         $response->assertSee('data-tooltip="Users"', false);
         $response->assertSee('data-tooltip="Roles & Permissions"', false);
@@ -429,7 +429,7 @@ class UserAndRbacTest extends TestCase
         $response->assertSee('data-tooltip="Dashboard"', false);
         $response->assertSee('data-tooltip="Patients"', false);
         $response->assertSee('data-tooltip="Dental Charts"', false);
-        $response->assertSee('data-tooltip="Interactive Odontogram"', false);
+        $response->assertDontSee('data-tooltip="Interactive Odontogram"', false);
         $response->assertSee('data-tooltip="Conditions & Legend"', false);
         $response->assertSee('data-tooltip="Users"', false);
         $response->assertSee('data-tooltip="Roles & Permissions"', false);

@@ -70,13 +70,20 @@ class RoleSeeder extends Seeder
         $receptionist = Role::findOrCreate(
             'receptionist',
             'Receptionist / Front Desk',
-            'Front desk operations: register and manage patient profiles.'
+            'Front desk operations: patient registration, visits, billing invoices, and payments.'
         );
         $receptionistPermissions = Permission::whereIn('name', [
+            'register:register:view',
+            'register:register:create',
+            'register:register:update',
             'patient:patients:view',
             'patient:patients:create',
             'patient:patients:edit',
             'patient:patients:update',
+            'invoice:invoices:view',
+            'invoice:invoices:create',
+            'payment:payments:view',
+            'payment:payments:create',
         ])->get();
         $receptionist->syncPermissions($receptionistPermissions);
 

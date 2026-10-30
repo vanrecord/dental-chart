@@ -6,11 +6,11 @@
 <style>
 :root{--ink:#171717;--paper:#fffefa;--muted:#686868;--line:#202020;--blue:#2457c5;--bg:#f8fafc;--border:#dadde2}
 .odontogram-page{width:100%;max-width:1400px;margin:0 auto;}
-.topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:18px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:18px;width:100%;}
 .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.16em;color:#64748b;font-weight:800}
 .title{margin:5px 0 7px;font-size:clamp(22px,2.5vw,30px);letter-spacing:-.035em;color:#0f172a}
 .sub{margin:0;color:#64748b;font-size:13.5px}
-.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-left:auto;justify-content:flex-end;}
 .btn-chart{border:1px solid #cbd5e1;background:#fff;border-radius:9px;padding:8px 12px;color:#334155;font-weight:700;font-size:13px;box-shadow:0 1px 2px rgba(0,0,0,0.04);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all 0.15s;}
 .btn-chart:hover{background:#f8fafc;border-color:#94a3b8}
 .btn-chart-primary{background:#2457c5;color:white;border-color:#2457c5}
@@ -125,27 +125,42 @@
       <p class="sub">Click a tooth surface to assign its condition color and clinical notes. Select a tooth number for a whole-tooth finding.</p>
     </div>
 
-    <div class="actions no-print">
+    <div class="actions no-print" style="margin-left: auto; justify-content: flex-end;">
       @if(isset($patients) && $patients->count() > 0)
-        <div class="patient-selector" title="Switch chart session">
-          <label for="chartPicker" style="font-size:11px;font-weight:700;color:#64748b;">Chart:</label>
-          <select id="chartPicker" onchange="if(this.value) window.location.href=this.value;">
-            <option value="{{ url('/dental') }}" {{ !isset($activeChart) ? 'selected' : '' }}>Demo Mode (Local)</option>
-            @foreach($patients as $p)
-              @foreach($p->dentalCharts as $c)
-                <option value="{{ route('dental.show', $c) }}" {{ (isset($activeChart) && $activeChart->id === $c->id) ? 'selected' : '' }}>
-                  {{ $p->full_name }} ({{ $c->chart_date->format('Y-m-d') }})
-                </option>
+        @if(!empty($invoiceId) && isset($activeChart))
+          <div class="patient-selector" style="background:#f1f5f9;border:1px solid #cbd5e1;padding:6px 12px;border-radius:8px;">
+            <span style="font-size:12px;font-weight:700;color:#0f172a;">👤 {{ $activeChart->patient->full_name }} <span style="color:#64748b;font-weight:500;">(Chart #{{ $activeChart->id }})</span></span>
+          </div>
+        @else
+          <div class="patient-selector" title="Switch chart session">
+            <label for="chartPicker" style="font-size:11px;font-weight:700;color:#64748b;">Chart:</label>
+            <select id="chartPicker" onchange="if(this.value) window.location.href=this.value;">
+              <option value="{{ url('/dental') }}" {{ !isset($activeChart) ? 'selected' : '' }}>Demo Mode (Local)</option>
+              @foreach($patients as $p)
+                @foreach($p->dentalCharts as $c)
+                  <option value="{{ route('dental.show', $c) }}" {{ (isset($activeChart) && $activeChart->id === $c->id) ? 'selected' : '' }}>
+                    {{ $p->full_name }} ({{ $c->chart_date->format('Y-m-d') }})
+                  </option>
+                @endforeach
               @endforeach
-            @endforeach
-          </select>
-        </div>
+            </select>
+          </div>
+        @endif
       @endif
 
       <button class="btn-chart" type="button" id="printBtn">Print</button>
       <button class="btn-chart" type="button" id="exportBtn">Export JSON</button>
       <button class="btn-chart btn-chart-danger" type="button" id="resetBtn">Reset</button>
-      <button class="btn-chart btn-chart-primary" type="button" id="saveBtn">Save Chart</button>
+      @if(!empty($invoiceId))
+        <button class="btn-chart btn-chart-primary" type="button" id="saveBtn" style="background:#0d9488;border-color:#0d9488;" title="Save findings and return to edit invoice">
+          💾 Save &amp; Return to Invoice
+        </button>
+        <a href="{{ route('invoices.edit', $invoiceId) }}" class="btn-chart" style="text-decoration:none;display:inline-flex;align-items:center;background:#e2e8f0;color:#0f172a;font-weight:600;margin-left:auto;" title="Return to Edit Invoice">
+          ← Back to Invoice
+        </a>
+      @else
+        <button class="btn-chart btn-chart-primary" type="button" id="saveBtn">Save Chart</button>
+      @endif
     </div>
   </header>
 
@@ -581,7 +596,18 @@ window.DENTAL_SERVER = {
     }
   });
 
-  byId('saveBtn').addEventListener('click', () => persist('Chart saved'));
+  const returnToInvoiceUrl = @json(!empty($invoiceId) ? route('invoices.edit', $invoiceId) : null);
+
+  byId('saveBtn').addEventListener('click', async () => {
+    byId('saveStatus').textContent = 'Saving chart...';
+    const ok = await persist('Chart saved');
+    if (ok && returnToInvoiceUrl) {
+      showToast('Chart saved! Returning to invoice...');
+      setTimeout(() => {
+        window.location.href = returnToInvoiceUrl;
+      }, 500);
+    }
+  });
   byId('exportBtn').addEventListener('click', exportJson);
   byId('printBtn').addEventListener('click', () => window.print());
   byId('otherInfo').addEventListener('input', () => persist('Notes updated'));

@@ -15,11 +15,11 @@ class PatientController extends Controller
         $query = Patient::query()->withCount('dentalCharts');
 
         if ($request->filled('search')) {
-            $search = $request->query('search');
+            $search = mb_strtolower($request->query('search'), 'UTF-8');
             $query->where(function ($q) use ($search) {
-                $q->where('full_name', 'like', "%{$search}%")
-                  ->orWhere('patient_number', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%");
+                $q->whereRaw('LOWER(full_name) LIKE ?', ["%{$search}%"])
+                  ->orWhereRaw('LOWER(patient_number) LIKE ?', ["%{$search}%"])
+                  ->orWhereRaw('LOWER(phone) LIKE ?', ["%{$search}%"]);
             });
         }
 

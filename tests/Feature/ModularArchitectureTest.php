@@ -29,6 +29,7 @@ class ModularArchitectureTest extends TestCase
             'ToothFinding',
             'ActivityLog',
             'User',
+            'Setting',
         ];
 
         foreach ($expectedModules as $moduleName) {
@@ -48,6 +49,7 @@ class ModularArchitectureTest extends TestCase
         $this->assertTrue(View::exists('dentalcondition::index'), 'dentalcondition::index view should exist');
         $this->assertTrue(View::exists('user::users.index'), 'user::users.index view should exist');
         $this->assertTrue(View::exists('user::roles.index'), 'user::roles.index view should exist');
+        $this->assertTrue(View::exists('setting::general'), 'setting::general view should exist');
     }
 
     public function test_collapsible_left_sidebar_renders_across_views(): void
@@ -67,7 +69,7 @@ class ModularArchitectureTest extends TestCase
         $response->assertSee('href="http://dental-chart.test/dashboard"', false);
         $response->assertSee('data-tooltip="Patients"', false);
         $response->assertSee('data-tooltip="Dental Charts"', false);
-        $response->assertSee('data-tooltip="Interactive Odontogram"', false);
+        $response->assertDontSee('data-tooltip="Interactive Odontogram"', false);
         $response->assertSee('data-tooltip="Users"', false);
         $response->assertSee('data-tooltip="Roles & Permissions"', false);
 

@@ -18,6 +18,7 @@ class DentalChartRequest extends FormRequest
             'chart_date' => ['required', 'date'],
             'dentition_type' => ['nullable', 'string', 'in:permanent,primary,mixed'],
             'examination_notes' => ['nullable', 'string'],
+            'invoice_id' => ['nullable', 'integer'],
         ];
     }
 }
