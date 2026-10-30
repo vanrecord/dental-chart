@@ -1167,348 +1167,118 @@
         }
 
         /* ======================================================== */
-        /* SELECT2 MODERN THEME OVERRIDES                           */
+        /* FLATPICKR DATEPICKER MODERN THEME                        */
         /* ======================================================== */
-        .select2-container {
-            max-width: 100%;
-            font-family: inherit;
-            font-size: 0.875rem;
-            text-align: left;
-            vertical-align: middle;
-            box-sizing: border-box;
-        }
-        /* Full width by default for standard form groups & rows */
-        .form-group > .select2-container,
-        .form-row .select2-container,
-        #findingModal .select2-container {
-            width: 100% !important;
-            max-width: 100%;
-        }
-        /* Flex filter forms: prevent select from stretching full width */
-        form[style*="display: flex"] .select2-container,
-        .filter-form .select2-container {
-            flex-shrink: 0;
-        }
-        /* Patient selector in Dental Chart Header */
-        .patient-selector .select2-container {
-            width: auto !important;
-            min-width: 160px;
-            max-width: 250px !important;
-        }
-        .patient-selector .select2-container .select2-selection--single {
-            border: none;
-            background: transparent;
-            height: 28px;
-            min-height: 28px;
-            padding: 0 4px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-        .select2-container .select2-selection--single {
-            height: 38px;
-            min-height: 38px;
-            padding: 0.35rem 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: 8px;
+        input[type="date"],
+        input.datepicker,
+        input.flatpickr-input {
             background-color: #ffffff;
-            display: flex;
-            align-items: center;
-            transition: border-color 0.15s ease, box-shadow 0.15s ease;
-        }
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            color: var(--text-main);
-            line-height: normal;
-            padding-left: 0;
-            padding-right: 22px;
-            font-weight: 500;
-            font-size: 0.875rem;
-            width: 100%;
-        }
-        .select2-container--default .select2-selection--single .select2-selection__placeholder {
-            color: var(--text-light);
-            font-weight: 400;
-        }
-        .select2-container--default .select2-selection--single .select2-selection__arrow {
-            height: 100%;
-            top: 0;
-            right: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 18px;
-        }
-        .select2-container--default .select2-selection--single .select2-selection__arrow b {
-            border-color: #64748b transparent transparent transparent;
-            border-width: 5px 4px 0 4px;
-            margin-left: -4px;
-            margin-top: -2px;
-        }
-        .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
-            border-color: transparent transparent #64748b transparent;
-            border-width: 0 4px 5px 4px;
-        }
-        .select2-container--default.select2-container--open .select2-selection--single,
-        .select2-container--default.select2-container--focus .select2-selection--single {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(36, 87, 197, 0.15);
-            outline: none;
-        }
-        .select2-container .select2-selection--multiple {
-            min-height: 38px;
-            padding: 3px 6px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background-color: #ffffff;
-        }
-        .select2-container--default.select2-container--focus .select2-selection--multiple {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(36, 87, 197, 0.15);
-            outline: none;
-        }
-        .select2-container--default .select2-selection--multiple .select2-selection__choice {
-            background-color: var(--primary-light);
-            border: 1px solid var(--primary-border);
-            color: var(--primary-dark);
-            border-radius: 6px;
-            padding: 2px 8px;
-            font-size: 0.8125rem;
-            font-weight: 500;
-            margin-top: 3px;
-        }
-        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-            color: var(--primary-dark);
-            margin-right: 6px;
-            font-weight: bold;
-        }
-        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
-            color: var(--danger);
-        }
-        .select2-dropdown {
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-            background-color: #ffffff;
-            z-index: 999999 !important;
-            overflow: hidden;
-            font-family: inherit;
-        }
-        .select2-container--open .select2-dropdown--below {
-            border-top: none;
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-        }
-        .select2-container--open .select2-dropdown--above {
-            border-bottom: none;
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-        .select2-search--dropdown {
-            padding: 8px;
-        }
-        .select2-container--default .select2-search--dropdown .select2-search__field {
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 6px 10px;
-            font-size: 0.8125rem;
-            outline: none;
-            width: 100%;
-            font-family: inherit;
-        }
-        .select2-container--default .select2-search--dropdown .select2-search__field:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(36, 87, 197, 0.15);
-        }
-        .select2-results__options {
-            padding: 4px;
-            max-height: 240px;
-        }
-        .select2-container--default .select2-results__option {
-            padding: 7px 10px;
-            font-size: 0.875rem;
-            border-radius: 6px;
-            margin-bottom: 2px;
-            color: var(--text-main);
-        }
-        .select2-container--default .select2-results__option--highlighted[aria-selected] {
-            background-color: var(--primary);
-            color: #ffffff;
-        }
-        .select2-container--default .select2-results__option[aria-selected="true"] {
-            background-color: var(--primary-light);
-            color: var(--primary-dark);
-            font-weight: 600;
-        }
-        .select2-container--default .select2-results__option--highlighted[aria-selected="true"] {
-            background-color: var(--primary);
-            color: #ffffff;
-        }
-        .select2-container--default.select2-container--disabled .select2-selection--single {
-            background-color: #f8fafc;
-            border-color: var(--border);
-            color: var(--text-muted);
-            cursor: not-allowed;
-        }
-        /* Table and compact contexts */
-        .data-table .select2-container .select2-selection--single,
-        .item-select + .select2-container .select2-selection--single {
-            height: 32px;
-            min-height: 32px;
-            padding: 0.2rem 0.5rem;
-            font-size: 0.8125rem;
-            border-radius: 6px;
-        }
-        .data-table .select2-container--default .select2-selection--single .select2-selection__arrow,
-        .item-select + .select2-container--default .select2-selection--single .select2-selection__arrow {
-            height: 30px;
-        }
-
-        /* ======================================================== */
-        /* DATATABLES SHOW/HIDE COLUMNS (COLVIS) STYLES             */
-        /* ======================================================== */
-        .colvis-wrapper {
-            position: relative;
-            display: inline-block;
-            vertical-align: middle;
-        }
-        .btn-colvis {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            height: 38px;
-            padding: 0 12px;
-            font-size: 0.8125rem;
-            font-weight: 600;
-            color: #334155;
-            background: #ffffff;
-            border: 1px solid var(--border);
-            border-radius: 8px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px 16px;
+            padding-right: 32px;
             cursor: pointer;
-            transition: all 0.15s ease;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-            white-space: nowrap;
-            user-select: none;
         }
-        .btn-colvis:hover,
-        .btn-colvis[aria-expanded="true"] {
-            background: #f8fafc;
-            border-color: #cbd5e1;
-            color: var(--primary);
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input.datepicker::-webkit-calendar-picker-indicator {
+            display: none !important;
+            -webkit-appearance: none;
         }
-        .btn-colvis svg {
-            color: var(--primary);
-            flex-shrink: 0;
-            transition: transform 0.15s ease;
-        }
-        .colvis-dropdown {
-            position: absolute;
-            right: 0;
-            top: calc(100% + 6px);
+        .flatpickr-calendar {
             background: #ffffff;
             border: 1px solid var(--border);
             border-radius: 10px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-            width: 270px;
-            max-width: 90vw;
-            z-index: 1050;
-            overflow: hidden;
             font-family: inherit;
-            text-align: left;
-            animation: colvisFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: 0.875rem;
+            width: 308px;
+            padding: 4px;
+            z-index: 999999 !important;
         }
-        @keyframes colvisFadeIn {
-            from { opacity: 0; transform: translateY(-4px); }
-            to { opacity: 1; transform: translateY(0); }
+        .flatpickr-calendar.arrowTop:before,
+        .flatpickr-calendar.arrowTop:after,
+        .flatpickr-calendar.arrowBottom:before,
+        .flatpickr-calendar.arrowBottom:after {
+            border-bottom-color: var(--border);
         }
-        .colvis-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 14px;
+        .flatpickr-months {
             background: #f8fafc;
+            border-radius: 8px 8px 0 0;
+            padding: 4px 0;
             border-bottom: 1px solid var(--border);
-            font-size: 0.8125rem;
+            align-items: center;
+        }
+        .flatpickr-months .flatpickr-month {
+            color: var(--text-main);
             font-weight: 700;
-            color: #0f172a;
+            fill: var(--text-main);
+            height: 34px;
         }
-        .colvis-actions {
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .flatpickr-current-month {
+            font-size: 0.95rem;
+            padding-top: 4px;
+            font-weight: 700;
         }
-        .colvis-btn-link {
-            border: none;
-            background: none;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 0;
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            font-weight: 700;
+            color: var(--text-main);
         }
-        .colvis-btn-show-all {
-            color: var(--primary);
-        }
-        .colvis-btn-show-all:hover {
-            text-decoration: underline;
-        }
-        .colvis-btn-reset {
-            color: #64748b;
-        }
-        .colvis-btn-reset:hover {
-            text-decoration: underline;
-        }
-        .colvis-body {
-            max-height: 280px;
-            overflow-y: auto;
+        .flatpickr-months .flatpickr-prev-month,
+        .flatpickr-months .flatpickr-next-month {
             padding: 8px 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-        .colvis-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 8px;
+            color: var(--text-muted);
+            fill: var(--text-muted);
             border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8125rem;
-            color: #334155;
-            user-select: none;
-            transition: background 0.12s ease;
         }
-        .colvis-item:hover {
-            background: #f1f5f9;
+        .flatpickr-months .flatpickr-prev-month:hover,
+        .flatpickr-months .flatpickr-next-month:hover {
+            color: var(--primary);
+            fill: var(--primary);
+            background: #eff6ff;
         }
-        .colvis-item input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            accent-color: var(--primary);
-            cursor: pointer;
-            margin: 0;
-            flex-shrink: 0;
-        }
-        .colvis-item input[type="checkbox"]:disabled {
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-        .colvis-item-title {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            flex: 1;
-        }
-        .colvis-badge-locked {
-            font-size: 0.65rem;
-            font-weight: 600;
-            background: #f1f5f9;
+        span.flatpickr-weekday {
             color: #64748b;
-            padding: 1px 6px;
-            border-radius: 4px;
-            margin-left: auto;
-            flex-shrink: 0;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        .flatpickr-day {
+            border-radius: 6px;
+            font-size: 0.875rem;
+            color: var(--text-main);
+            height: 38px;
+            line-height: 38px;
+            margin: 1px 0;
+        }
+        .flatpickr-day:hover,
+        .flatpickr-day:focus {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            color: #1e40af;
+        }
+        .flatpickr-day.today {
+            border-color: var(--primary);
+            font-weight: 700;
+        }
+        .flatpickr-day.today:hover {
+            background: #eff6ff;
+            color: #1e40af;
+        }
+        .flatpickr-day.selected,
+        .flatpickr-day.selected:hover,
+        .flatpickr-day.selected:focus {
+            background: var(--primary) !important;
+            border-color: var(--primary) !important;
+            color: #ffffff !important;
+            font-weight: 700;
+        }
+        .flatpickr-day.flatpickr-disabled,
+        .flatpickr-day.flatpickr-disabled:hover {
+            color: #cbd5e1;
         }
     </style>
-    <!-- Select2 CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+    <!-- Flatpickr Datepicker CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     @yield('styles')
 </head>
 <body class="app-body">
@@ -1809,335 +1579,58 @@
         }
     });
     </script>
-    <!-- jQuery & Select2 JavaScript Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- Flatpickr Datepicker JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js"></script>
     <script>
-    (function($) {
-        if (!$) return;
+    (function() {
+        function initDatepickers(context) {
+            if (typeof flatpickr === 'undefined') return;
 
-        function initSelect2(context) {
-            if (!$.fn.select2) return;
-
-            const $root = context ? $(context) : $(document);
-            let $selects = $root.is('select') ? $root : $root.find('select');
-
-            $selects = $selects.not('.no-select2').not('.select2-hidden-accessible');
-
-            $selects.each(function() {
-                const $el = $(this);
-                const styleAttr = this.getAttribute('style') || '';
-                const optionCount = $el.find('option').length;
-
-                // Extract any explicit width/max-width/min-width/flex defined inline
-                const widthMatch = styleAttr.match(/(?:^|;\s*)width:\s*([^;]+)/i);
-                const maxWMatch = styleAttr.match(/max-width:\s*([^;]+)/i);
-                const minWMatch = styleAttr.match(/min-width:\s*([^;]+)/i);
-                const flexMatch = styleAttr.match(/flex:\s*([^;]+)/i);
-
-                const explicitWidth = widthMatch ? widthMatch[1].trim() : null;
-                const explicitMaxW = maxWMatch ? maxWMatch[1].trim() : null;
-                const explicitMinW = minWMatch ? minWMatch[1].trim() : null;
-                const explicitFlex = flexMatch ? flexMatch[1].trim() : null;
-
-                // Identify element context
-                const isInFlexFilter = $el.closest('form[style*="display: flex"], .filter-form, .table-filter').length > 0;
-                const isInTable = $el.closest('table').length > 0;
-                const isInPatientSelector = $el.closest('.patient-selector').length > 0;
-
-                let s2Width = '100%';
-
-                if (explicitWidth && explicitWidth !== '100%') {
-                    s2Width = explicitWidth;
-                } else if (explicitMaxW) {
-                    s2Width = explicitMaxW;
-                } else if (isInPatientSelector) {
-                    s2Width = 'auto';
-                } else if (isInFlexFilter && !explicitWidth && !explicitMaxW) {
-                    s2Width = '180px';
-                } else if (isInTable) {
-                    s2Width = '100%';
-                }
-
-                $el.select2({
-                    width: s2Width,
-                    dropdownAutoWidth: true,
-                    minimumResultsForSearch: optionCount > 6 ? 0 : Infinity
-                });
-
-                const $container = $el.next('.select2-container');
-                if (explicitMaxW) {
-                    $container.css({ 'max-width': explicitMaxW, 'width': explicitMaxW });
-                } else if (isInFlexFilter && !explicitWidth) {
-                    $container.css({ 'max-width': '220px', 'width': s2Width });
-                }
-                if (explicitMinW) {
-                    $container.css('min-width', explicitMinW);
-                }
-                if (explicitFlex) {
-                    $container.css('flex', explicitFlex);
-                }
-
-                // Bridge Select2 changes to native change event so inline onchange and native listeners fire
-                $el.on('select2:select select2:clear', function() {
-                    this.dispatchEvent(new Event('change', { bubbles: true }));
-                });
-            });
-        }
-
-        window.initSelect2 = initSelect2;
-
-        /* ======================================================== */
-        /* DATATABLES SHOW/HIDE COLUMNS (COLVIS) LOGIC              */
-        /* ======================================================== */
-        function initColumnVisibility() {
-            const userId = @json(auth()->id() ?? 'guest');
-
-            // Select all listing tables inside cards (.table-wrap, .table-responsive, or .data-table)
-            const tables = document.querySelectorAll('.card .table-wrap > table, .card .table-responsive > table, table.data-table:not(#itemsTable)');
-
-            tables.forEach((table, tIndex) => {
-                if (table.dataset.colvisInitialized) return;
-
-                const thead = table.querySelector('thead');
-                if (!thead) return;
-                const headerRow = thead.querySelector('tr');
-                if (!headerRow) return;
-
-                const ths = Array.from(headerRow.querySelectorAll('th'));
-                if (ths.length <= 1) return;
-
-                table.dataset.colvisInitialized = 'true';
-
-                // Find toolbar or insert toolbar row
-                const card = table.closest('.card');
-                let toolbar = card ? card.querySelector('form[method="GET"]') : null;
-
-                const tableId = table.id || table.getAttribute('data-table-id') || `tbl_${tIndex}`;
-                const storageKey = `colvis_pref_${userId}_${window.location.pathname.replace(/[^a-zA-Z0-9_-]/g, '_')}_${tableId}`;
-
-                // Load saved preferences
-                let savedPrefs = {};
-                try {
-                    const raw = localStorage.getItem(storageKey);
-                    if (raw) savedPrefs = JSON.parse(raw);
-                } catch (e) {}
-
-                // Extract columns
-                const columns = ths.map((th, index) => {
-                    const name = (th.innerText || th.textContent || '').trim();
-                    const lowerName = name.toLowerCase();
-                    const isEssential = lowerName.includes('action') || lowerName === 'id' || lowerName === '#';
-                    return {
-                        index: index,
-                        name: name || `Column ${index + 1}`,
-                        isEssential: isEssential
-                    };
-                });
-
-                function adjustColspans() {
-                    const visibleThCount = Array.from(headerRow.children).filter(th => th.style.display !== 'none').length;
-                    table.querySelectorAll('tbody td[colspan]').forEach(td => {
-                        td.setAttribute('colspan', visibleThCount);
-                    });
-                }
-
-                function setColumnVisible(index, visible) {
-                    // 1. If DataTables API is active on this table
-                    if (window.jQuery && $.fn.DataTable && $.fn.DataTable.isDataTable(table)) {
-                        try {
-                            const dt = $(table).DataTable();
-                            dt.column(index).visible(visible, false);
-                            dt.columns.adjust().draw(false);
-                            return;
-                        } catch (e) {}
-                    }
-
-                    // 2. Standard DOM column visibility
-                    if (headerRow.children[index]) {
-                        headerRow.children[index].style.display = visible ? '' : 'none';
-                    }
-                    table.querySelectorAll('tbody tr').forEach(tr => {
-                        const cell = tr.children[index];
-                        if (cell && !cell.hasAttribute('colspan')) {
-                            cell.style.display = visible ? '' : 'none';
-                        }
-                    });
-                    table.querySelectorAll('tfoot tr').forEach(tr => {
-                        if (tr.children[index]) {
-                            tr.children[index].style.display = visible ? '' : 'none';
-                        }
-                    });
-
-                    adjustColspans();
-                }
-
-                // Apply saved preferences
-                columns.forEach(col => {
-                    if (col.isEssential) {
-                        setColumnVisible(col.index, true);
-                    } else if (savedPrefs[col.name] !== undefined) {
-                        setColumnVisible(col.index, savedPrefs[col.name]);
-                    }
-                });
-
-                // Create Eye Icon Button and Dropdown
-                const wrapper = document.createElement('div');
-                wrapper.className = 'colvis-wrapper';
-                if (toolbar) {
-                    wrapper.style.marginLeft = 'auto';
-                }
-
-                const eyeIconSvg = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
-                const eyeOffIconSvg = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
-
-                wrapper.innerHTML = `
-                    <button type="button" class="btn btn-outline btn-colvis" title="Show/Hide Columns" aria-label="Show/Hide Columns" aria-haspopup="true" aria-expanded="false">
-                        <span class="btn-colvis-icon">${eyeIconSvg}</span>
-                        <span>Columns</span>
-                    </button>
-                    <div class="colvis-dropdown" style="display: none;">
-                        <div class="colvis-header">
-                            <span>Show / Hide Columns</span>
-                            <div class="colvis-actions">
-                                <button type="button" class="colvis-btn-link colvis-btn-show-all">Show All</button>
-                                <span style="color: #cbd5e1;">|</span>
-                                <button type="button" class="colvis-btn-link colvis-btn-reset">Reset Default</button>
-                            </div>
-                        </div>
-                        <div class="colvis-body"></div>
-                    </div>
-                `;
-
-                const btn = wrapper.querySelector('.btn-colvis');
-                const iconSpan = wrapper.querySelector('.btn-colvis-icon');
-                const dropdown = wrapper.querySelector('.colvis-dropdown');
-                const body = wrapper.querySelector('.colvis-body');
-                const btnShowAll = wrapper.querySelector('.colvis-btn-show-all');
-                const btnReset = wrapper.querySelector('.colvis-btn-reset');
-
-                // Populate checkboxes
-                columns.forEach(col => {
-                    const isVisible = col.isEssential ? true : (savedPrefs[col.name] !== undefined ? savedPrefs[col.name] : true);
-                    const item = document.createElement('label');
-                    item.className = 'colvis-item';
-                    item.innerHTML = `
-                        <input type="checkbox" class="colvis-checkbox" data-index="${col.index}" data-name="${encodeURIComponent(col.name)}" ${isVisible ? 'checked' : ''} ${col.isEssential ? 'disabled' : ''}>
-                        <span class="colvis-item-title" title="${col.name}">${col.name}</span>
-                        ${col.isEssential ? '<span class="colvis-badge-locked">Locked</span>' : ''}
-                    `;
-                    body.appendChild(item);
-                });
-
-                // Toggle dropdown
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    const isOpen = dropdown.style.display !== 'none';
-
-                    // Close all other colvis dropdowns
-                    document.querySelectorAll('.colvis-dropdown').forEach(d => d.style.display = 'none');
-                    document.querySelectorAll('.btn-colvis').forEach(b => {
-                        b.setAttribute('aria-expanded', 'false');
-                        const icon = b.querySelector('.btn-colvis-icon');
-                        if (icon) icon.innerHTML = eyeIconSvg;
-                    });
-
-                    if (!isOpen) {
-                        dropdown.style.display = 'block';
-                        btn.setAttribute('aria-expanded', 'true');
-                        iconSpan.innerHTML = eyeOffIconSvg;
-                    } else {
-                        dropdown.style.display = 'none';
-                        btn.setAttribute('aria-expanded', 'false');
-                        iconSpan.innerHTML = eyeIconSvg;
-                    }
-                });
-
-                // Handle checkbox toggles
-                body.addEventListener('change', function(e) {
-                    if (!e.target.matches('.colvis-checkbox')) return;
-                    const cb = e.target;
-                    const colIndex = parseInt(cb.dataset.index, 10);
-                    const colName = decodeURIComponent(cb.dataset.name);
-                    const isChecked = cb.checked;
-
-                    setColumnVisible(colIndex, isChecked);
-
-                    savedPrefs[colName] = isChecked;
-                    try {
-                        localStorage.setItem(storageKey, JSON.stringify(savedPrefs));
-                    } catch (err) {}
-                });
-
-                // "Show All"
-                btnShowAll.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    columns.forEach(col => {
-                        setColumnVisible(col.index, true);
-                        savedPrefs[col.name] = true;
-                    });
-                    body.querySelectorAll('.colvis-checkbox').forEach(cb => cb.checked = true);
-                    try {
-                        localStorage.setItem(storageKey, JSON.stringify(savedPrefs));
-                    } catch (err) {}
-                });
-
-                // "Reset Default"
-                btnReset.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    try {
-                        localStorage.removeItem(storageKey);
-                    } catch (err) {}
-                    savedPrefs = {};
-                    columns.forEach(col => {
-                        setColumnVisible(col.index, true);
-                    });
-                    body.querySelectorAll('.colvis-checkbox').forEach(cb => cb.checked = true);
-                });
-
-                // Mount button in toolbar or above table
-                if (toolbar) {
-                    toolbar.appendChild(wrapper);
-                } else {
-                    const tableWrap = table.closest('.table-wrap') || table.closest('.table-responsive') || table;
-                    const bar = document.createElement('div');
-                    bar.className = 'colvis-toolbar';
-                    bar.style.display = 'flex';
-                    bar.style.justifyContent = 'flex-end';
-                    bar.style.marginBottom = '0.75rem';
-                    bar.appendChild(wrapper);
-                    tableWrap.parentNode.insertBefore(bar, tableWrap);
-                }
-            });
-
-            // Global click-outside listener
-            if (!window._colvisClickOutsideBound) {
-                window._colvisClickOutsideBound = true;
-                document.addEventListener('click', function(e) {
-                    if (!e.target.closest('.colvis-wrapper')) {
-                        document.querySelectorAll('.colvis-dropdown').forEach(d => d.style.display = 'none');
-                        document.querySelectorAll('.btn-colvis').forEach(b => {
-                            b.setAttribute('aria-expanded', 'false');
-                            const icon = b.querySelector('.btn-colvis-icon');
-                            if (icon) {
-                                icon.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
-                            }
-                        });
-                    }
-                });
+            const root = context || document;
+            let elements = [];
+            if (root instanceof Element && (root.matches('input[type="date"]') || root.matches('.datepicker'))) {
+                elements = [root];
+            } else {
+                elements = Array.from(root.querySelectorAll('input[type="date"], input.datepicker'));
             }
+
+            elements.forEach(function(el) {
+                if (el._flatpickr) return;
+
+                const currentVal = el.value;
+
+                // Change type="date" to type="text" with class="datepicker" to prevent browser native picker clash
+                if (el.type === 'date') {
+                    try {
+                        el.type = 'text';
+                    } catch(e) {}
+                    el.classList.add('datepicker');
+                }
+
+                flatpickr(el, {
+                    dateFormat: 'Y-m-d',
+                    defaultDate: currentVal || undefined,
+                    allowInput: true,
+                    disableMobile: true,
+                    monthSelectorType: 'static',
+                    onChange: function(selectedDates, dateStr, instance) {
+                        instance.element.dispatchEvent(new Event('change', { bubbles: true }));
+                        instance.element.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                });
+            });
         }
 
-        window.initColumnVisibility = initColumnVisibility;
+        window.initDatepickers = initDatepickers;
 
-        $(document).ready(function() {
-            initSelect2();
-            initColumnVisibility();
-        });
-    })(window.jQuery);
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                initDatepickers();
+            });
+        } else {
+            initDatepickers();
+        }
+    })();
     </script>
     @yield('scripts')
 </body>

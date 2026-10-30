@@ -307,9 +307,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         tableBody.appendChild(tr);
 
-        // Initialize Select2 on dynamically added row
-        if (window.initSelect2) {
-            window.initSelect2(tr);
+        // Initialize Datepicker on dynamically added row
+        if (window.initDatepickers) {
+            window.initDatepickers(tr);
         }
 
         // Attach change listeners
