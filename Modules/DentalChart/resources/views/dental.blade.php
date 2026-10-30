@@ -320,6 +320,9 @@ window.DENTAL_SERVER = {
   function renderLegend() {
     byId('legend').innerHTML = '<span class="legend-title">Color guide</span>' + conditions.map(c=>`<span class="legend-item"><span class="swatch" style="background:${c.color}"></span>${esc(c.label)}</span>`).join('');
     byId('conditionSelect').innerHTML = '<option value="">No condition / note only</option>' + conditions.map(c=>`<option value="${c.value}">${esc(c.label)}</option>`).join('');
+    if (window.jQuery && $('#conditionSelect').hasClass('select2-hidden-accessible')) {
+      $('#conditionSelect').trigger('change');
+    }
   }
 
   function loadSavedState() {
@@ -432,6 +435,9 @@ window.DENTAL_SERVER = {
     byId('colorSelect').value = validColor(finding.color) ? finding.color : '#d83c43';
     byId('statusSelect').value = finding.status || 'observed';
     byId('noteInput').value = finding.note || '';
+    if (window.jQuery) {
+      $('#surfaceSelect, #conditionSelect, #statusSelect').trigger('change');
+    }
     byId('findingModal').classList.add('open');
     setTimeout(() => byId('conditionSelect').focus(), 30);
   }

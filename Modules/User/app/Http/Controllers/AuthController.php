@@ -42,6 +42,20 @@ class AuthController extends Controller
         if (Auth::attempt([$primaryField => $loginInput, 'password' => $credentials['password']], $remember)
             || ($primaryField !== 'email' && Auth::attempt(['email' => $loginInput, 'password' => $credentials['password']], $remember))
             || ($primaryField === 'email' && Auth::attempt(['username' => $loginInput, 'password' => $credentials['password']], $remember))) {
+            
+            $user = Auth::user();
+            if (isset($user->is_active) && ! $user->is_active) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return back()
+                    ->withInput($request->only('username', 'remember'))
+                    ->withErrors([
+                        'username' => 'Your account is currently inactive. Please contact the administrator.',
+                    ]);
+            }
+
             $request->session()->regenerate();
 
             return redirect()->intended(route('dashboard'));

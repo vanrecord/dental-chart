@@ -24,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'is_super_addmin',
+        'is_active',
     ];
 
     /**
@@ -47,7 +48,32 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_super_addmin' => 'boolean',
+            'is_active' => 'boolean',
         ];
+    }
+
+    /**
+     * User's personal profile relationship.
+     */
+    public function profile()
+    {
+        return $this->hasOne(\Modules\Hospital\Models\Profile::class);
+    }
+
+    /**
+     * User's doctor professional record relationship.
+     */
+    public function doctor()
+    {
+        return $this->hasOne(\Modules\Hospital\Models\Doctor::class);
+    }
+
+    /**
+     * Check if user account is active.
+     */
+    public function getIsActiveAttribute(): bool
+    {
+        return (bool) ($this->attributes['is_active'] ?? true);
     }
 
     /**

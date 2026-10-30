@@ -281,7 +281,7 @@
                             <button type="button" class="btn-rte" onclick="execRte('underline')" title="Underline (Ctrl+U)"><u>U</u></button>
                             <span style="width: 1px; height: 22px; background: #cbd5e1; margin: 0 4px; align-self: center;"></span>
                             
-                            <select onchange="execRteFormatBlock(this.value); this.selectedIndex=0;" style="height: 28px; font-size: 0.75rem; border: 1px solid #cbd5e1; border-radius: 4px; padding: 0 6px; background: #fff; cursor: pointer;">
+                            <select class="no-select2" onchange="execRteFormatBlock(this.value); this.selectedIndex=0;" style="height: 28px; font-size: 0.75rem; border: 1px solid #cbd5e1; border-radius: 4px; padding: 0 6px; background: #fff; cursor: pointer;">
                                 <option value="">Paragraph Style</option>
                                 <option value="p">Normal (p)</option>
                                 <option value="h3">Heading (h3)</option>

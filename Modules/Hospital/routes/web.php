@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Hospital\Http\Controllers\DoctorController;
 use Modules\Hospital\Http\Controllers\ProductCategoryController;
 use Modules\Hospital\Http\Controllers\ProductController;
 use Modules\Hospital\Http\Controllers\ServiceCategoryController;
@@ -11,4 +12,5 @@ Route::middleware('auth')->prefix('hospital')->name('hospital.')->group(function
     Route::resource('product-categories', ProductCategoryController::class);
     Route::resource('services', ServiceController::class);
     Route::resource('products', ProductController::class);
+    Route::resource('doctors', DoctorController::class);
 });
